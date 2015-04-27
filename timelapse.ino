@@ -64,7 +64,7 @@ void loop() {
   readTime();
   readTemperatureAndHumidity();
   readVcc();
-  recordData();
+  logData();
   if (sensorData.now.unixtime() - lastPhotoSeconds > PHOTO_INTERVAL_SECONDS) {
     triggerCamera();
     lastPhotoSeconds = sensorData.now.unixtime();
@@ -105,10 +105,10 @@ void readVcc() {
   sensorData.dividedVcc = analogRead(PIN_DIVIDED_VCC);
 }
 
-void recordData() {
-  Serial.print("t:\t");
+void logData() {
+  Serial.print("t: ");
   Serial.print(sensorData.now.unixtime());
-  Serial.print("\t");
+  Serial.print(" ");
   Serial.print(sensorData.now.year(), DEC);
   Serial.print('/');
   Serial.print(sensorData.now.month(), DEC);
@@ -121,17 +121,19 @@ void recordData() {
   Serial.print(':');
   Serial.print(sensorData.now.second(), DEC);
 
-  Serial.print("\tTemperature:\t");
+  Serial.print("\tTemperature: ");
   if (isnan(sensorData.temperatureCelsius)) {
     Serial.print("NaN");
   } else {
     Serial.print(sensorData.temperatureCelsius);
+    Serial.print(" C");
   }
-  Serial.print("\tHumidity:\t");
+  Serial.print("\tHumidity: ");
   if (isnan(sensorData.humidityPercent)) {
     Serial.print("NaN");
   } else {
     Serial.print(sensorData.humidityPercent);
+    Serial.print(" %");
   }
 
   Serial.print("\tVcc ");
