@@ -160,7 +160,7 @@ void printData() {
   Serial.print(sensorData.dividedVcc * 3.3 / 1024);
   Serial.print(F("v measured => "));
   // Vbat / (R1 + R2) = Vmeasured / R2
-  // Vbat = (3.3 * Vmeasured * (R1 + R2)) / (1023 * R2)
+  // Vbat = (3.3 * A0 * (R1 + R2)) / (1023 * R2)
   Serial.print(
       (sensorData.dividedVcc * 3.3 * (1.190 + 4.689))
       / (1023 * 1.190));
