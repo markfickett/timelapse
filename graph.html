@@ -1,0 +1,23 @@
+<html>
+<head>
+  <title>Time Lapse Data Graph</title>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.0/dygraph-combined.js"></script>
+</head>
+  <div id="graphdiv"></div>
+  <script type="text/javascript">
+    g = new Dygraph(
+      document.getElementById("graphdiv"),
+      "combined.csv",
+      {
+        'height': 800,
+        'width': 1000,
+        'ylabel': 'Temperature/Humidity',
+        'y2label': 'Voltage',
+        'series': {
+          'Supply V': {
+            'axis': 'y2',
+          },
+        },
+      });
+  </script>
+</html>
