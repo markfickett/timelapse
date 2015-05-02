@@ -9,6 +9,7 @@
 
 // DHT-22 Temperature/humidity sensor: https://learn.adafruit.com/dht
 // Using https://github.com/ringerc/Arduino-DHT22 for Pro Micro 3.3v .
+// Draws .05mA between reads, 1.66mA while reading.
 #define DHT22_PIN  2
 
 #define PHOTO_INTERVAL_SECONDS 60 * 5
