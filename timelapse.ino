@@ -18,7 +18,15 @@
 #define PIN_CAMERA_SHUTTER 3
 #define PIN_CAMERA_STAY_ON_SWITCH 6
 
-#define PIN_DIVIDED_VCC A0
+#define PIN_DIVIDED_VCC A1
+#define PIN_DIVIDED_PV  A0
+// Resistor values for battery and photovoltaics. Each pair may be scaled
+// together arbitrarily (ex: 4.7 and 1.2 or 47 and 12).
+#define VCC_DIVIDER_SRC 1.000
+#define VCC_DIVIDER_GND 0.272
+#define PV_DIVIDER_SRC  0.997
+#define PV_DIVIDER_GND  0.272
+#define AREF 3.3
 
 #define PIN_SPI_CHIP_SELECT_REQUIRED 10
 // The SD library requires, for SPI communication:
@@ -31,6 +39,7 @@ struct SensorData {
   float humidityPercent;
   float temperatureCelsius;
   int dividedVcc;
+  int dividedPhotoVoltaic;
 };
 
 struct SensorData sensorData;
@@ -79,7 +88,7 @@ void loop() {
   delay(2000);
   readTime();
   readTemperatureAndHumidity();
-  readVcc();
+  readVoltages();
   printData();
   writeData();
   if (sensorData.now.unixtime() - lastPhotoSeconds > PHOTO_INTERVAL_SECONDS) {
@@ -118,8 +127,9 @@ void readTemperatureAndHumidity() {
   }
 }
 
-void readVcc() {
+void readVoltages() {
   sensorData.dividedVcc = analogRead(PIN_DIVIDED_VCC);
+  sensorData.dividedPhotoVoltaic = analogRead(PIN_DIVIDED_PV);
 }
 
 void printData() {
@@ -153,20 +163,32 @@ void printData() {
     Serial.print(F(" %"));
   }
 
-  Serial.print(F("\tVcc "));
-  Serial.print(sensorData.dividedVcc);
-  Serial.print(F("/1023 "));
-  // 3.3 * A0 / 1023 = Vmeasured
-  Serial.print(sensorData.dividedVcc * 3.3 / 1024);
-  Serial.print(F("v measured => "));
-  // Vbat / (R1 + R2) = Vmeasured / R2
-  // Vbat = (3.3 * A0 * (R1 + R2)) / (1023 * R2)
-  Serial.print(
-      (sensorData.dividedVcc * 3.3 * (1.190 + 4.689))
-      / (1023 * 1.190));
-  Serial.print(F("v"));
+  printVoltage(
+      F("\tVcc "), sensorData.dividedVcc, VCC_DIVIDER_SRC, VCC_DIVIDER_GND);
+  printVoltage(
+      F("\tPV "), sensorData.dividedPhotoVoltaic, PV_DIVIDER_SRC,
+      PV_DIVIDER_GND);
 
   Serial.println();
+}
+
+void printVoltage(
+    const __FlashStringHelper* prefix,
+    int analogReading,
+    float rToSource,
+    float rToGround) {
+  Serial.print(prefix);
+  Serial.print(analogReading);
+  Serial.print(F("/1023 "));
+  // 3.3 * A0 / 1023 = Vmeasured
+  Serial.print(analogReading * AREF / 1024);
+  Serial.print(F("v measured => "));
+  // Vsrc / (R1 + R2) = Vmeasured / R2
+  // Vsrc = (3.3 * A0 * (R1 + R2)) / (1023 * R2)
+  Serial.print(
+      (analogReading * AREF * (rToSource + rToGround))
+      / (1023 * rToGround));
+  Serial.print(F("v"));
 }
 
 void writeData() {
@@ -189,6 +211,8 @@ void writeData() {
       << sensorData.humidityPercent
       << ","
       << sensorData.dividedVcc
+      << "\n"
+      << sensorData.dividedPhotoVoltaic
       << "\n";
   logFile.print(buf);
 
