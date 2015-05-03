@@ -6,6 +6,7 @@
 #include "DHT22.h"
 #include "RTClib.h"
 #include "SdFat.h"
+#include "Narcoleptic.h"
 
 // DHT-22 Temperature/humidity sensor: https://learn.adafruit.com/dht
 // Using https://github.com/ringerc/Arduino-DHT22 for Pro Micro 3.3v .
@@ -50,7 +51,7 @@ struct SensorData {
 struct SensorData sensorData;
 DHT22 dht(DHT22_PIN);
 DHT22_ERROR_t dhtError;
-uint32_t lastPhotoSeconds;
+uint32_t nextPhotoSeconds;
 
 // Chronodot https://www.adafruit.com/products/255 and guide
 // learn.adafruit.com/ds1307-real-time-clock-breakout-board-kit/wiring-it-up
@@ -70,7 +71,7 @@ void setup() {
   setUpCameraPins();
 
   readTime();
-  lastPhotoSeconds = sensorData.now.unixtime();
+  nextPhotoSeconds = sensorData.now.unixtime() + PHOTO_INTERVAL_SECONDS;
   if (!sd.begin(PIN_SPI_CHIP_SELECT_REQUIRED, SPI_QUARTER_SPEED)) {
     sd.initErrorHalt();
   }
@@ -90,15 +91,18 @@ void setUpCameraPins() {
 }
 
 void loop() {
-  delay(2000);
+  lowPowerSleepMillis(60 * 1000);
+
   readTime();
   readTemperatureAndHumidity();
   readVoltages();
   printData();
   writeData();
-  if (sensorData.now.unixtime() - lastPhotoSeconds > PHOTO_INTERVAL_SECONDS) {
+  if (sensorData.now.unixtime() >= nextPhotoSeconds) {
     triggerCamera();
-    lastPhotoSeconds = sensorData.now.unixtime();
+    while (sensorData.now.unixtime() >= nextPhotoSeconds) {
+      nextPhotoSeconds += PHOTO_INTERVAL_SECONDS;
+    }
   }
   if (digitalRead(PIN_CAMERA_STAY_ON_SWITCH) == LOW) {
     digitalWrite(PIN_CAMERA_POWER_SUPPLY, HIGH);
@@ -243,4 +247,22 @@ void triggerCamera() {
   digitalWrite(PIN_CAMERA_POWER_ON, LOW);
   delay(100);
   digitalWrite(PIN_CAMERA_POWER_SUPPLY, LOW);
+}
+
+void lowPowerSleepMillis(int millis) {
+  Narcoleptic.disableTimer1();
+  Narcoleptic.disableTimer2();
+  Narcoleptic.disableSerial();
+  Narcoleptic.disableADC();
+  Narcoleptic.disableWire();
+  Narcoleptic.disableSPI();
+
+  Narcoleptic.delay(millis);
+
+  Narcoleptic.enableTimer1();
+  Narcoleptic.enableTimer2();
+  Narcoleptic.enableSerial();
+  Narcoleptic.enableADC();
+  Narcoleptic.enableWire();
+  Narcoleptic.enableSPI();
 }
