@@ -220,7 +220,7 @@ void writeData() {
       << sensorData.humidityPercent
       << ","
       << sensorData.dividedVcc
-      << "\n"
+      << ","
       << sensorData.dividedPhotoVoltaic
       << "\n";
   logFile.print(buf);
