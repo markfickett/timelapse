@@ -1,5 +1,8 @@
 /**
  * Run time lapse camera, monitoring environment and battery stats.
+ *
+ * Overall, the system draws (@12v) 0.7mA while idle, 14mA during data
+ * sampling/writes, and ? when triggering the camera.
  */
 
 #include "Wire.h"
@@ -24,6 +27,7 @@
 #define PIN_DIVIDED_PV  A0
 // Resistor values for battery and photovoltaics. Each pair may be scaled
 // together arbitrarily (ex: 4.7 and 1.2 or 47 and 12).
+// The voltage dividers draw about 0.02mA each.
 #define VCC_DIVIDER_SRC 1.000
 #define VCC_DIVIDER_GND 0.272
 #define PV_DIVIDER_SRC  0.997
@@ -57,6 +61,7 @@ uint32_t nextPhotoSeconds;
 // Chronodot https://www.adafruit.com/products/255 and guide
 // learn.adafruit.com/ds1307-real-time-clock-breakout-board-kit/wiring-it-up
 // Using https://github.com/adafruit/RTClib
+// It draws 0.1mA consistently while 3.3 vcc is supplied.
 RTC_DS1307 rtc;
 
 char buf[128]; // filenames and data log lines
@@ -251,6 +256,7 @@ void triggerCamera() {
 }
 
 void lowPowerSleepMillis(int millis) {
+  // This requires replacing millis() in DHT22.cpp with Narcoleptic.millis().
   Narcoleptic.disableTimer1();
   Narcoleptic.disableTimer2();
   Narcoleptic.disableSerial();
