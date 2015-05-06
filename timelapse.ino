@@ -36,7 +36,8 @@
 // 12 MISO (master input, slave output)
 // 13 CLK (clock)
 // Current draw is card dependant. forum.arduino.cc/index.php?topic=149504.15
-// Crucial 4GB: 0.06mA sleep between writes, 7.5mA writes.
+// Crucial 4GB class 2: 0.06mA sleep between writes, 7.5mA writes.
+// SanDisk 4GB class 4: 0.10mA sleep, 4.8mA writes.
 // SanDisk ExtremePlus 32GB: 4.32mA sleep, 8mA writes.
 // Kinsington 16GB: 16mA sleep, 22mA writes.
 
