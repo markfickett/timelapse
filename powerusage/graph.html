@@ -1,0 +1,71 @@
+<html>
+<head>
+  <title>Time Lapse Power Usage Graph</title>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.0/dygraph-combined.js"></script>
+</head>
+  <div id="graphdiv"></div>
+  <script type="text/javascript">
+    g = new Dygraph(
+      document.getElementById("graphdiv"),
+      "powerusage.csv",
+      {
+        'height': 800,
+        'width': 1000,
+        'ylabel': 'mA'
+      });
+    g.ready(function() {
+      console.log('ready');
+      g.setAnnotations([
+        {
+          series: 'mA',
+          x: 41034,
+          shortText: 'L',
+          text: 'Power on Arduino, sensors, SD card to log data.'
+        },
+        {
+          series: 'mA',
+          x: 43080,
+          shortText: 'L',
+          text: 'Log sensor data.'
+        },
+        {
+          series: 'mA',
+          x: 43144,
+          shortText: 'P',
+          text: 'Turn on the camera power supply. Wait 100ms.'
+        },
+        {
+          series: 'mA',
+          x: 43246,
+          shortText: 'O',
+          text: 'Turn on the camera. Wait 4s for it to be ready.'
+        },
+        {
+          series: 'mA',
+          x: 47244,
+          shortText: 'S',
+          text: 'Trigger the shutter. Wait 100ms.'
+        },
+        {
+          series: 'mA',
+          x: 47344,
+          shortText: '!S',
+          text: 'Release shutter. Wait 10s to write data / for long exposures.'
+        },
+        {
+          series: 'mA',
+          x: 57345,
+          shortText: '!O',
+          text: 'Turn the camera off. Wait 100ms.'
+        },
+        {
+          series: 'mA',
+          x: 57446,
+          shortText: '!P',
+          text: 'Turn off the camera power supply. Sleep the microcontroller.'
+        }
+      ]);
+    });
+  </script>
+  <p>Using <a href="https://learn.adafruit.com/adafruit-ina219-current-sensor-breakout">Adafruit's INA219B power monitoring breakout board</a> to log current drawn by the time lapse controller and camera. The code used is a simplification of their example, logging <code>millis()</code> and <code>ina219.getCurrent_ma()</code> constantly.</p>
+</html>
