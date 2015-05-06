@@ -3,6 +3,8 @@
   <title>Time Lapse Power Usage Graph</title>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.0/dygraph-combined.js"></script>
 </head>
+  <p>Using <a href="https://learn.adafruit.com/adafruit-ina219-current-sensor-breakout">Adafruit's INA219B power monitoring breakout board</a> to log current drawn by the time lapse controller and camera. The code used is a simplification of their example, logging <code>millis()</code> and <code>ina219.getCurrent_ma()</code> constantly.</p>
+  <p>Rendered using <a href="http://dygraphs.com/">dygraph</a>. Drag and select to zoom in, double-click to zoom back out.</p>
   <div id="graphdiv"></div>
   <script type="text/javascript">
     g = new Dygraph(
@@ -73,5 +75,4 @@
       ]);
     });
   </script>
-  <p>Using <a href="https://learn.adafruit.com/adafruit-ina219-current-sensor-breakout">Adafruit's INA219B power monitoring breakout board</a> to log current drawn by the time lapse controller and camera. The code used is a simplification of their example, logging <code>millis()</code> and <code>ina219.getCurrent_ma()</code> constantly.</p>
 </html>
