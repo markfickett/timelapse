@@ -14,17 +14,22 @@
 // DHT-22 Temperature/humidity sensor: https://learn.adafruit.com/dht
 // Using https://github.com/ringerc/Arduino-DHT22 for Pro Micro 3.3v .
 // Draws .05mA between reads, 1.66mA while reading.
-#define DHT22_PIN  2
+#define DHT22_PIN  8
 
 #define PHOTO_INTERVAL_SECONDS 60 * 5
+// Increase this interval if DHT22 says DHT_ERROR_TOOQUICK (7).
+#define SLEEP_INTERVAL_MILLIS 5 * 1000
 
-#define PIN_CAMERA_POWER_SUPPLY 5
-#define PIN_CAMERA_POWER_ON 4
-#define PIN_CAMERA_SHUTTER 3
-#define PIN_CAMERA_STAY_ON_SWITCH 6
+// 12v (battery) power supply for the 9V regulator powering the camera.
+#define PIN_CAMERA_POWER_SUPPLY 9
+// Red wire to camera via opto-isolator.
+#define PIN_CAMERA_POWER_ON 3
+// Yellow wire to camera via opto-isolator.
+#define PIN_CAMERA_SHUTTER 2
+#define PIN_CAMERA_STAY_ON_SWITCH 4
 
-#define PIN_DIVIDED_VCC A1
-#define PIN_DIVIDED_PV  A0
+#define PIN_DIVIDED_VCC A0
+#define PIN_DIVIDED_PV  A1
 // Resistor values for battery and photovoltaics. Each pair may be scaled
 // together arbitrarily (ex: 4.7 and 1.2 or 47 and 12).
 // The voltage dividers draw about 0.02mA each.
@@ -32,7 +37,7 @@
 #define VCC_DIVIDER_GND 0.272
 #define PV_DIVIDER_SRC  0.997
 #define PV_DIVIDER_GND  0.272
-#define AREF 3.3
+#define AREF 2.048
 
 #define PIN_SPI_CHIP_SELECT_REQUIRED 10
 // The SD library requires, for SPI communication:
@@ -70,6 +75,9 @@ SdFile logFile;
 
 void setup() {
   Serial.begin(57600);
+  // This must be called before analogRead if voltage is applied to the AREF
+  // pin, or else the board may be damaged.
+  analogReference(EXTERNAL);
 
   Wire.begin();
   rtc.begin();
@@ -97,7 +105,7 @@ void setUpCameraPins() {
 }
 
 void loop() {
-  lowPowerSleepMillis(60 * 1000);
+  lowPowerSleepMillis(SLEEP_INTERVAL_MILLIS);
 
   readTime();
   readTemperatureAndHumidity();
