@@ -33,9 +33,9 @@
 // Resistor values for battery and photovoltaics. Each pair may be scaled
 // together arbitrarily (ex: 4.7 and 1.2 or 47 and 12).
 // The voltage dividers draw about 0.02mA each.
-#define VCC_DIVIDER_SRC 1.000
+#define VCC_DIVIDER_SRC 1.000 + 0.992
 #define VCC_DIVIDER_GND 0.272
-#define PV_DIVIDER_SRC  0.997
+#define PV_DIVIDER_SRC  0.997 + 0.996
 #define PV_DIVIDER_GND  0.272
 #define AREF 2.048
 

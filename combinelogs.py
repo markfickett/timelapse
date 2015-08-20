@@ -47,8 +47,8 @@ if __name__ == '__main__':
                 '%s:%d of wrong length %d should be 5: %r'
                 % (log_filename, i, len(row), row))
           row[0] = FormatEpochSeconds(row[0])
-          row[3] = CalculateBatteryVoltage(row[3], 1.000, 0.272)
-          row[4] = CalculateBatteryVoltage(row[4], 0.997, 0.272)
+          row[3] = CalculateBatteryVoltage(row[3], 1.000 + 0.992, 0.272)  # batt
+          row[4] = CalculateBatteryVoltage(row[4], 0.997 + 0.996, 0.272)  # PV
           out_csv.writerow(row)
           row_num += 1
 
