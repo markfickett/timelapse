@@ -187,6 +187,9 @@ bool scheduleNextPhotoGetIsTimeForPhoto() {
     while (nextPhotoSeconds <= t) {
       nextPhotoSeconds += PHOTO_INTERVAL_FAST_SECONDS;
     }
+    Serial.print(F("Next: "));
+    printDateTime(DateTime(nextPhotoSeconds));
+    Serial.println();
   } else if (isTimeForPhoto || toggleFastMode) {
     int i;
     uint8_t currentHour = sensorData.now.hour();
@@ -200,11 +203,11 @@ bool scheduleNextPhotoGetIsTimeForPhoto() {
         sensorData.now.day(),
         scheduleModeHours[i]);
     nextPhotoSeconds = nextPhotoDateTime.unixtime();
+    Serial.print(F("Next: "));
+    printDateTime(nextPhotoDateTime);
+    Serial.println();
   }
 
-  Serial.print(F("Next: "));
-  printDateTime(nextPhotoSeconds);
-  Serial.println();
   return isTimeForPhoto;
 }
 
@@ -249,14 +252,14 @@ void printData() {
   Serial.print(F("t: "));
   printDateTime(sensorData.now);
 
-  Serial.print(F("\tTemp: "));
+  Serial.print(F("\tTemperature: "));
   if (isnan(sensorData.temperatureCelsius)) {
     Serial.print(F("NaN"));
   } else {
     Serial.print(sensorData.temperatureCelsius);
     Serial.print(F(" C"));
   }
-  Serial.print(F("\tHum: "));
+  Serial.print(F("\tHumidity: "));
   if (isnan(sensorData.humidityPercent)) {
     Serial.print(F("NaN"));
   } else {
