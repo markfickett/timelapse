@@ -2,7 +2,7 @@
  * Run time lapse camera, monitoring environment and battery stats.
  *
  * Overall, the system draws (@12v) 0.7mA while idle, 14mA during data
- * sampling/writes, and ? when triggering the camera.
+ * sampling/writes, and 200mA-2A when triggering the camera.
  */
 
 #include "Wire.h"
