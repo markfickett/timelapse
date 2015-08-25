@@ -153,6 +153,7 @@ void loop() {
       if (digitalRead(PIN_CAMERA_STAY_ON_SWITCH) == LOW) {
         break;
       }
+      Serial.println(F(" Done."));
     }
     delay(100);
     digitalWrite(PIN_CAMERA_POWER_ON, LOW);
