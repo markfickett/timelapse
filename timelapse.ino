@@ -16,9 +16,8 @@
 // Draws .05mA between reads, 1.66mA while reading.
 #define DHT22_PIN  8
 
-#define PHOTO_INTERVAL_SECONDS 60 * 5
-// Increase this interval if DHT22 says DHT_ERROR_TOOQUICK (7).
-#define SLEEP_INTERVAL_MILLIS 5 * 1000
+// Increase this interval if DHT22 says DHT_ERROR_TOOQUICK (7). 5s is OK.
+#define SLEEP_INTERVAL_MILLIS (10 * 1000)
 
 // 12v (battery) power supply for the 9V regulator powering the camera.
 #define PIN_CAMERA_POWER_SUPPLY 9
@@ -26,16 +25,25 @@
 #define PIN_CAMERA_POWER_ON 3
 // Yellow wire to camera via opto-isolator.
 #define PIN_CAMERA_SHUTTER 2
+// A normally-open switch. When closed momentarily, the camera stays on until
+// it is closed momentarily again.
 #define PIN_CAMERA_STAY_ON_SWITCH 4
+
+// A normally-open switch. When closed momentarily, go into fast mode (take
+// pictures more often) for a while. If it's closed momentarily again, abort
+// fast mode.
+#define PIN_FAST_MODE_SWITCH 5
+#define PHOTO_INTERVAL_FAST_SECONDS (2 * 60)
+#define FAST_MODE_DURATION_SECONDS (10 * 60 * 60)
 
 #define PIN_DIVIDED_VCC A0
 #define PIN_DIVIDED_PV  A1
 // Resistor values for battery and photovoltaics. Each pair may be scaled
 // together arbitrarily (ex: 4.7 and 1.2 or 47 and 12).
 // The voltage dividers draw about 0.02mA each.
-#define VCC_DIVIDER_SRC 1.000 + 0.992
+#define VCC_DIVIDER_SRC (1.000 + 0.992)
 #define VCC_DIVIDER_GND 0.272
-#define PV_DIVIDER_SRC  0.997 + 0.996
+#define PV_DIVIDER_SRC  (0.997 + 0.996)
 #define PV_DIVIDER_GND  0.272
 #define AREF 2.048
 
@@ -61,7 +69,20 @@ struct SensorData {
 struct SensorData sensorData;
 DHT22 dht(DHT22_PIN);
 DHT22_ERROR_t dhtError;
+
 uint32_t nextPhotoSeconds;
+uint32_t exitFastModeSeconds;
+bool isFastMode;
+// In schedule mode, take photos at three predefined times during the day.
+// Repeat the first hour +24 as the last value so there's always an hour in this
+// list greater than the current hour, for ease of calculating a time in the
+// future. These must have intervals of >1h.
+uint8_t scheduleModeHours[] = {
+    4,   // midnight
+    13,  // mid-morning: 8AM (winter) or 9AM (summer)
+    21,  // late afternoon but always before sunset: 4 (winter) or 5PM (summer)
+    28
+};
 
 // Chronodot https://www.adafruit.com/products/255 and guide
 // learn.adafruit.com/ds1307-real-time-clock-breakout-board-kit/wiring-it-up
@@ -85,7 +106,12 @@ void setup() {
   setUpCameraPins();
 
   readTime();
-  nextPhotoSeconds = sensorData.now.unixtime() + PHOTO_INTERVAL_SECONDS;
+
+  // Effectively start in slow mode and do not immediately take an exposure.
+  isFastMode = true;
+  nextPhotoSeconds = exitFastModeSeconds = sensorData.now.unixtime();
+  scheduleNextPhotoGetIsTimeForPhoto();
+
   if (!sd.begin(PIN_SPI_CHIP_SELECT_REQUIRED, SPI_QUARTER_SPEED)) {
     sd.initErrorHalt();
   }
@@ -102,6 +128,7 @@ void setUpCameraPins() {
   pinMode(PIN_CAMERA_POWER_ON, OUTPUT);
   pinMode(PIN_CAMERA_SHUTTER, OUTPUT);
   pinMode(PIN_CAMERA_STAY_ON_SWITCH, INPUT_PULLUP);
+  pinMode(PIN_FAST_MODE_SWITCH, INPUT_PULLUP);
 }
 
 void loop() {
@@ -112,26 +139,73 @@ void loop() {
   readVoltages();
   printData();
   writeData();
-  if (sensorData.now.unixtime() >= nextPhotoSeconds) {
+  if (scheduleNextPhotoGetIsTimeForPhoto()) {
     triggerCamera();
-    while (sensorData.now.unixtime() >= nextPhotoSeconds) {
-      nextPhotoSeconds += PHOTO_INTERVAL_SECONDS;
-    }
   }
   if (digitalRead(PIN_CAMERA_STAY_ON_SWITCH) == LOW) {
     digitalWrite(PIN_CAMERA_POWER_SUPPLY, HIGH);
     delay(100);
     digitalWrite(PIN_CAMERA_POWER_ON, HIGH);
     delay(100);
-    while (digitalRead(PIN_CAMERA_STAY_ON_SWITCH) == LOW) {
-      Serial.println(F("Waiting with camera on."));
+    while (true) {
+      Serial.println(F("Waiting on 10s."));
       delay(10000);
+      if (digitalRead(PIN_CAMERA_STAY_ON_SWITCH) == LOW) {
+        break;
+      }
     }
     delay(100);
     digitalWrite(PIN_CAMERA_POWER_ON, LOW);
     delay(1000);
     digitalWrite(PIN_CAMERA_POWER_SUPPLY, LOW);
   }
+}
+
+bool scheduleNextPhotoGetIsTimeForPhoto() {
+  uint32_t t = sensorData.now.unixtime();
+
+  // Toggle modes.
+  bool toggleFastMode =
+      digitalRead(PIN_FAST_MODE_SWITCH) == LOW ||
+      (isFastMode && (t >= exitFastModeSeconds));
+  if (toggleFastMode) {
+    isFastMode = !isFastMode;
+    if (isFastMode) {
+      Serial.print(F("+fast mode, ends: "));
+      exitFastModeSeconds = t + FAST_MODE_DURATION_SECONDS;
+      printDateTime(DateTime(exitFastModeSeconds));
+      Serial.println();
+      nextPhotoSeconds = t - 1;
+    } else {
+      Serial.println(F("+schedule mode."));
+    }
+  }
+
+  bool isTimeForPhoto = t >= nextPhotoSeconds;
+  // Schedule the next photo.
+  if (isFastMode) {
+    while (nextPhotoSeconds <= t) {
+      nextPhotoSeconds += PHOTO_INTERVAL_FAST_SECONDS;
+    }
+  } else if (isTimeForPhoto || toggleFastMode) {
+    int i;
+    uint8_t currentHour = sensorData.now.hour();
+    while (scheduleModeHours[i] <= currentHour) {
+      i++;
+    }
+    // DateTime::unixtime implicitly allows hours > 24 (no bounds checking).
+    DateTime nextPhotoDateTime(
+        sensorData.now.year(),
+        sensorData.now.month(),
+        sensorData.now.day(),
+        scheduleModeHours[i]);
+    nextPhotoSeconds = nextPhotoDateTime.unixtime();
+  }
+
+  Serial.print(F("Next: "));
+  printDateTime(nextPhotoSeconds);
+  Serial.println();
+  return isTimeForPhoto;
 }
 
 void readTime() {
@@ -155,30 +229,34 @@ void readVoltages() {
   sensorData.dividedPhotoVoltaic = analogRead(PIN_DIVIDED_PV);
 }
 
+void printDateTime(const DateTime& t) {
+  Serial.print(t.unixtime());
+  Serial.print(F(" "));
+  Serial.print(t.year(), DEC);
+  Serial.print('/');
+  Serial.print(t.month(), DEC);
+  Serial.print('/');
+  Serial.print(t.day(), DEC);
+  Serial.print(' ');
+  Serial.print(t.hour(), DEC);
+  Serial.print(':');
+  Serial.print(t.minute(), DEC);
+  Serial.print(':');
+  Serial.print(t.second(), DEC);
+}
+
 void printData() {
   Serial.print(F("t: "));
-  Serial.print(sensorData.now.unixtime());
-  Serial.print(F(" "));
-  Serial.print(sensorData.now.year(), DEC);
-  Serial.print('/');
-  Serial.print(sensorData.now.month(), DEC);
-  Serial.print('/');
-  Serial.print(sensorData.now.day(), DEC);
-  Serial.print(' ');
-  Serial.print(sensorData.now.hour(), DEC);
-  Serial.print(':');
-  Serial.print(sensorData.now.minute(), DEC);
-  Serial.print(':');
-  Serial.print(sensorData.now.second(), DEC);
+  printDateTime(sensorData.now);
 
-  Serial.print(F("\tTemperature: "));
+  Serial.print(F("\tTemp: "));
   if (isnan(sensorData.temperatureCelsius)) {
     Serial.print(F("NaN"));
   } else {
     Serial.print(sensorData.temperatureCelsius);
     Serial.print(F(" C"));
   }
-  Serial.print(F("\tHumidity: "));
+  Serial.print(F("\tHum: "));
   if (isnan(sensorData.humidityPercent)) {
     Serial.print(F("NaN"));
   } else {
@@ -253,7 +331,7 @@ void triggerCamera() {
   delay(4000); // Camera initialization.
 
   digitalWrite(PIN_CAMERA_SHUTTER, HIGH);
-  Serial.println(F("Triggering camera shutter."));
+  Serial.println(F(" shutter."));
   delay(100);
   digitalWrite(PIN_CAMERA_SHUTTER, LOW);
   delay(10000); // Data write + long exposure.
@@ -264,6 +342,9 @@ void triggerCamera() {
 }
 
 void lowPowerSleepMillis(int millis) {
+  // Finish sending any debug messages before disabling timers.
+  Serial.flush();
+
   // This requires replacing millis() in DHT22.cpp with Narcoleptic.millis().
   Narcoleptic.disableTimer1();
   Narcoleptic.disableTimer2();
