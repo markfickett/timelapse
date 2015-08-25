@@ -34,7 +34,9 @@
 // fast mode.
 #define PIN_FAST_MODE_SWITCH 5
 #define PHOTO_INTERVAL_FAST_SECONDS (2 * 60)
-#define FAST_MODE_DURATION_SECONDS (10 * 60 * 60)
+// When defined as (10 * 60 * 60) the exitFastModeSeconds calculation is
+// incorrect.
+#define FAST_MODE_DURATION_SECONDS 36000
 
 #define PIN_DIVIDED_VCC A0
 #define PIN_DIVIDED_PV  A1
