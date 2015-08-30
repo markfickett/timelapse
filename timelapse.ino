@@ -14,7 +14,7 @@
 // DHT-22 Temperature/humidity sensor: https://learn.adafruit.com/dht
 // Using https://github.com/ringerc/Arduino-DHT22 for Pro Micro 3.3v .
 // Draws .05mA between reads, 1.66mA while reading.
-#define DHT22_PIN  8
+#define PIN_DHT22  8
 
 // Increase this interval if DHT22 says DHT_ERROR_TOOQUICK (7). 5s is OK.
 #define SLEEP_INTERVAL_MILLIS (10 * 1000)
@@ -69,7 +69,7 @@ struct SensorData {
 };
 
 struct SensorData sensorData;
-DHT22 dht(DHT22_PIN);
+DHT22 dht(PIN_DHT22);
 DHT22_ERROR_t dhtError;
 
 uint32_t nextPhotoSeconds;
