@@ -32,6 +32,19 @@
 // A normally-open switch. When closed momentarily, the camera stays on until
 // it is closed momentarily again.
 #define PIN_CAMERA_STAY_ON_SWITCH 4
+// Sense the memory-access LED on the camera to detect when an exposure is done
+// and written to storage.
+#define PIN_CAMERA_MEMORY_ACCESS A2
+
+// Threshold for the analog reading for the camera memory-access LED. LED on
+// (writing) is typically 0, and off (done) is typically 300.
+#define CAMERA_ACCESS_THRESHOLD 50
+// How long to wait between each time checking if the camera is done taking
+// the exposure.
+#define CAMERA_ACCESS_WAIT_INTERVAL_MS 50
+// Number of times to repeat waiting for the camera to be done taking the
+// exposure (1 minute).
+#define CAMERA_FAILSAFE_WAIT_COUNT_LIMIT 1200
 
 // A normally-open switch. When closed momentarily, go into fast mode (take
 // pictures more often) for a while. If it's closed momentarily again, abort
@@ -352,17 +365,41 @@ void triggerCamera() {
   digitalWrite(PIN_CAMERA_POWER_SUPPLY, HIGH);
   delay(100);
   digitalWrite(PIN_CAMERA_POWER_ON, HIGH);
-  delay(4000); // Camera initialization.
+  // Wait for camera initialization.
+  waitForCameraMemoryAccess();
 
+  Serial.println(F(" shutter"));
   digitalWrite(PIN_CAMERA_SHUTTER, HIGH);
-  Serial.println(F(" shutter."));
-  delay(100);
+  delay(50);
   digitalWrite(PIN_CAMERA_SHUTTER, LOW);
-  delay(10000); // Data write + long exposure.
+  waitForCameraMemoryAccess();
 
+  Serial.println(F(" power off"));
   digitalWrite(PIN_CAMERA_POWER_ON, LOW);
   delay(100);
   digitalWrite(PIN_CAMERA_POWER_SUPPLY, LOW);
+}
+
+void waitForCameraMemoryAccess() {
+  int a;
+  int failsafeCount = 0;
+  // Wait for the exposure to finish and the camera to start writing.
+  Serial.println(F(" access start wait"));
+  while (((a = analogRead(PIN_CAMERA_MEMORY_ACCESS)) < CAMERA_ACCESS_THRESHOLD)
+      && failsafeCount < CAMERA_FAILSAFE_WAIT_COUNT_LIMIT) {
+    delay(CAMERA_ACCESS_WAIT_INTERVAL_MS);
+    failsafeCount++;
+  }
+  // Wait for for the camera to finish writing the image.
+  Serial.println(F(" access end wait"));
+  while (((a = analogRead(PIN_CAMERA_MEMORY_ACCESS)) > CAMERA_ACCESS_THRESHOLD)
+      && failsafeCount < CAMERA_FAILSAFE_WAIT_COUNT_LIMIT) {
+    delay(CAMERA_ACCESS_WAIT_INTERVAL_MS);
+    failsafeCount++;
+  }
+  if (failsafeCount >= CAMERA_FAILSAFE_WAIT_COUNT_LIMIT) {
+    Serial.println(F("memory access wait timeout"));
+  }
 }
 
 void lowPowerSleepMillis(int millis) {
