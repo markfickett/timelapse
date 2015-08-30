@@ -171,12 +171,12 @@ void loop() {
     digitalWrite(PIN_CAMERA_POWER_ON, HIGH);
     delay(100);
     while (true) {
-      Serial.println(F("Waiting on 10s."));
-      delay(10000);
+      Serial.println(F("Waiting on."));
+      delay(1000);
       if (digitalRead(PIN_CAMERA_STAY_ON_SWITCH) == LOW) {
+        Serial.println(F(" done"));
         break;
       }
-      Serial.println(F(" Done."));
     }
     delay(100);
     digitalWrite(PIN_CAMERA_POWER_ON, LOW);
