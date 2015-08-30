@@ -11,6 +11,10 @@
 #include "SdFat.h"
 #include "Narcoleptic.h"
 
+// Not the onboard status LED, which is used by the micro-SD card and obscured
+// in this application.
+#define PIN_STATUS_LED 6
+
 // DHT-22 Temperature/humidity sensor: https://learn.adafruit.com/dht
 // Using https://github.com/ringerc/Arduino-DHT22 for Pro Micro 3.3v .
 // Draws .05mA between reads, 1.66mA while reading.
@@ -101,6 +105,8 @@ void setup() {
   // This must be called before analogRead if voltage is applied to the AREF
   // pin, or else the board may be damaged.
   analogReference(EXTERNAL);
+  pinMode(PIN_STATUS_LED, OUTPUT);
+  digitalWrite(PIN_STATUS_LED, HIGH);
 
   Wire.begin();
   rtc.begin();
@@ -117,6 +123,7 @@ void setup() {
   if (!sd.begin(PIN_SPI_CHIP_SELECT_REQUIRED, SPI_QUARTER_SPEED)) {
     sd.initErrorHalt();
   }
+  digitalWrite(PIN_STATUS_LED, LOW);
 }
 
 void setTime() {
@@ -145,6 +152,7 @@ void loop() {
     triggerCamera();
   }
   if (digitalRead(PIN_CAMERA_STAY_ON_SWITCH) == LOW) {
+    digitalWrite(PIN_STATUS_LED, HIGH);
     digitalWrite(PIN_CAMERA_POWER_SUPPLY, HIGH);
     delay(100);
     digitalWrite(PIN_CAMERA_POWER_ON, HIGH);
@@ -161,6 +169,7 @@ void loop() {
     digitalWrite(PIN_CAMERA_POWER_ON, LOW);
     delay(1000);
     digitalWrite(PIN_CAMERA_POWER_SUPPLY, LOW);
+    digitalWrite(PIN_STATUS_LED, LOW);
   }
 }
 
@@ -179,8 +188,20 @@ bool scheduleNextPhotoGetIsTimeForPhoto() {
       printDateTime(DateTime(exitFastModeSeconds));
       Serial.println();
       nextPhotoSeconds = t - 1;
+      for (int i = 0; i < 20; i++) {
+        digitalWrite(PIN_STATUS_LED, HIGH);
+        delay(50);
+        digitalWrite(PIN_STATUS_LED, LOW);
+        delay(50);
+      }
     } else {
       Serial.println(F("+schedule mode."));
+      for (int i = 0; i < 3; i++) {
+        digitalWrite(PIN_STATUS_LED, HIGH);
+        delay(1000);
+        digitalWrite(PIN_STATUS_LED, LOW);
+        delay(100);
+      }
     }
   }
 
@@ -190,9 +211,6 @@ bool scheduleNextPhotoGetIsTimeForPhoto() {
     while (nextPhotoSeconds <= t) {
       nextPhotoSeconds += PHOTO_INTERVAL_FAST_SECONDS;
     }
-    Serial.print(F("Next: "));
-    printDateTime(DateTime(nextPhotoSeconds));
-    Serial.println();
   } else if (isTimeForPhoto || toggleFastMode) {
     int i;
     uint8_t currentHour = sensorData.now.hour();
