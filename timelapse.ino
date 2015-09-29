@@ -6,9 +6,15 @@
  */
 
 #include "Wire.h"
+// Using https://github.com/ringerc/Arduino-DHT22 for Pro Micro 3.3v .
+// Turning off timers for sleep requires replacing millis() in DHT22.cpp with
+// Narcoleptic.millis().
 #include "DHT22.h"
+// Using https://github.com/adafruit/RTClib
 #include "RTClib.h"
+// Using https://github.com/greiman/SdFat
 #include "SdFat.h"
+// Using https://code.google.com/p/narcoleptic/source/browse/
 #include "Narcoleptic.h"
 
 // Not the onboard status LED, which is used by the micro-SD card and obscured
@@ -16,7 +22,6 @@
 #define PIN_STATUS_LED 6
 
 // DHT-22 Temperature/humidity sensor: https://learn.adafruit.com/dht
-// Using https://github.com/ringerc/Arduino-DHT22 for Pro Micro 3.3v .
 // Draws .05mA between reads, 1.66mA while reading.
 #define PIN_DHT22  8
 
@@ -46,14 +51,10 @@
 // exposure (1 minute).
 #define CAMERA_FAILSAFE_WAIT_COUNT_LIMIT 1200
 
-// A normally-open switch. When closed momentarily, go into fast mode (take
-// pictures more often) for a while. If it's closed momentarily again, abort
-// fast mode.
-#define PIN_FAST_MODE_SWITCH 5
+// Whether to use fast mode (frequent photos whenever it's light), or schedule
+// mode (photos at specific times).
+#define FAST_MODE
 #define PHOTO_INTERVAL_FAST_SECONDS (10 * 60)
-// When defined as (10 * 60 * 60) the exitFastModeSeconds calculation is
-// incorrect.
-#define FAST_MODE_DURATION_SECONDS 36000
 
 #define PIN_DIVIDED_VCC A0
 #define PIN_DIVIDED_PV  A1
@@ -90,8 +91,6 @@ DHT22 dht(PIN_DHT22);
 DHT22_ERROR_t dhtError;
 
 uint32_t nextPhotoSeconds;
-uint32_t exitFastModeSeconds;
-bool isFastMode;
 // In schedule mode, take photos at three predefined times during the day.
 // Repeat the first hour +24 as the last value so there's always an hour in this
 // list greater than the current hour, for ease of calculating a time in the
@@ -105,7 +104,6 @@ uint8_t scheduleModeHours[] = {
 
 // Chronodot https://www.adafruit.com/products/255 and guide
 // learn.adafruit.com/ds1307-real-time-clock-breakout-board-kit/wiring-it-up
-// Using https://github.com/adafruit/RTClib
 // It draws 0.1mA consistently while 3.3 vcc is supplied.
 RTC_DS1307 rtc;
 
@@ -128,10 +126,7 @@ void setup() {
 
   readTime();
 
-  // Effectively start in slow mode and do not immediately take an exposure.
-  isFastMode = true;
-  nextPhotoSeconds = exitFastModeSeconds = sensorData.now.unixtime();
-  scheduleNextPhotoGetIsTimeForPhoto();
+  nextPhotoSeconds = sensorData.now.unixtime();
 
   if (!sd.begin(PIN_SPI_CHIP_SELECT_REQUIRED, SPI_QUARTER_SPEED)) {
     sd.initErrorHalt();
@@ -150,7 +145,6 @@ void setUpCameraPins() {
   pinMode(PIN_CAMERA_POWER_ON, OUTPUT);
   pinMode(PIN_CAMERA_SHUTTER, OUTPUT);
   pinMode(PIN_CAMERA_STAY_ON_SWITCH, INPUT_PULLUP);
-  pinMode(PIN_FAST_MODE_SWITCH, INPUT_PULLUP);
 }
 
 void loop() {
@@ -188,43 +182,15 @@ void loop() {
 
 bool scheduleNextPhotoGetIsTimeForPhoto() {
   uint32_t t = sensorData.now.unixtime();
-
-  // Toggle modes.
-  bool toggleFastMode =
-      digitalRead(PIN_FAST_MODE_SWITCH) == LOW ||
-      (isFastMode && (t >= exitFastModeSeconds));
-  if (toggleFastMode) {
-    isFastMode = !isFastMode;
-    if (isFastMode) {
-      Serial.print(F("+fast mode, ends: "));
-      exitFastModeSeconds = t + FAST_MODE_DURATION_SECONDS;
-      printDateTime(DateTime(exitFastModeSeconds));
-      Serial.println();
-      nextPhotoSeconds = t - 1;
-      for (int i = 0; i < 20; i++) {
-        digitalWrite(PIN_STATUS_LED, HIGH);
-        delay(50);
-        digitalWrite(PIN_STATUS_LED, LOW);
-        delay(50);
-      }
-    } else {
-      Serial.println(F("+schedule mode."));
-      for (int i = 0; i < 3; i++) {
-        digitalWrite(PIN_STATUS_LED, HIGH);
-        delay(1000);
-        digitalWrite(PIN_STATUS_LED, LOW);
-        delay(100);
-      }
-    }
-  }
-
   bool isTimeForPhoto = t >= nextPhotoSeconds;
-  // Schedule the next photo.
-  if (isFastMode) {
-    while (nextPhotoSeconds <= t) {
-      nextPhotoSeconds += PHOTO_INTERVAL_FAST_SECONDS;
-    }
-  } else if (isTimeForPhoto || toggleFastMode) {
+
+#ifdef FAST_MODE
+  while (nextPhotoSeconds <= t) {
+    nextPhotoSeconds += PHOTO_INTERVAL_FAST_SECONDS;
+  }
+#else
+  // Find the next scheduled photo time.
+  if (isTimeForPhoto) {
     int i;
     uint8_t currentHour = sensorData.now.hour();
     while (scheduleModeHours[i] <= currentHour) {
@@ -241,6 +207,7 @@ bool scheduleNextPhotoGetIsTimeForPhoto() {
     printDateTime(nextPhotoDateTime);
     Serial.println();
   }
+#endif
 
   return isTimeForPhoto;
 }
@@ -406,7 +373,6 @@ void lowPowerSleepMillis(int millis) {
   // Finish sending any debug messages before disabling timers.
   Serial.flush();
 
-  // This requires replacing millis() in DHT22.cpp with Narcoleptic.millis().
   Narcoleptic.disableTimer1();
   Narcoleptic.disableTimer2();
   Narcoleptic.disableSerial();
