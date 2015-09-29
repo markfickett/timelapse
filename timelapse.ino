@@ -50,7 +50,7 @@
 // pictures more often) for a while. If it's closed momentarily again, abort
 // fast mode.
 #define PIN_FAST_MODE_SWITCH 5
-#define PHOTO_INTERVAL_FAST_SECONDS (2 * 60)
+#define PHOTO_INTERVAL_FAST_SECONDS (10 * 60)
 // When defined as (10 * 60 * 60) the exitFastModeSeconds calculation is
 // incorrect.
 #define FAST_MODE_DURATION_SECONDS 36000
