@@ -123,13 +123,20 @@ void loop() {
 
 bool scheduleNextPhotoGetIsTimeForPhoto() {
   uint32_t t = sensorData.now.unixtime();
-  bool isTimeForPhoto = t >= nextPhotoSeconds;
+  bool isTimeForPhoto;
 
 #ifdef FAST_MODE
+  int pvReading = sensorData.dividedPhotoVoltaic;
+  float pvVoltage =
+      (pvReading * AREF * (PV_DIVIDER_SRC + PV_DIVIDER_GND))
+      / (1023 * PV_DIVIDER_GND);
+  isTimeForPhoto =
+      t >= nextPhotoSeconds && pvVoltage >= FAST_MODE_PV_THRESHOLD_V;
   while (nextPhotoSeconds <= t) {
     nextPhotoSeconds += PHOTO_INTERVAL_FAST_SECONDS;
   }
 #else
+  isTimeForPhoto = t >= nextPhotoSeconds;
   // Find the next scheduled photo time.
   if (isTimeForPhoto) {
     int i;
