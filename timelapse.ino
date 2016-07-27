@@ -102,8 +102,6 @@ void setUpCameraPins() {
 }
 
 void loop() {
-  lowPowerSleepMillis(SLEEP_INTERVAL_MILLIS);
-
   readTime();
   readTemperatureAndHumidity();
   readVoltages();
@@ -132,6 +130,8 @@ void loop() {
     digitalWrite(PIN_CAMERA_POWER_SUPPLY, LOW);
     digitalWrite(PIN_STATUS_LED, LOW);
   }
+
+  lowPowerSleepMillis(SLEEP_INTERVAL_MILLIS);
 }
 
 bool scheduleNextPhotoGetIsTimeForPhoto() {

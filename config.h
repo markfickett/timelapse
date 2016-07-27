@@ -9,7 +9,8 @@
 #define PIN_DHT22  8
 
 // Increase this interval if DHT22 says DHT_ERROR_TOOQUICK (7). 5s is OK.
-#define SLEEP_INTERVAL_MILLIS (10 * 1000)
+// This value is passed to Narcoleptic as an int, so must be < INT_MAX (32767).
+#define SLEEP_INTERVAL_MILLIS (30 * 1000)
 
 // 12v (battery) power supply for the 9V regulator powering the camera.
 #define PIN_CAMERA_POWER_SUPPLY 9
