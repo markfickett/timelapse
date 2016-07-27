@@ -139,18 +139,32 @@ bool scheduleNextPhotoGetIsTimeForPhoto() {
   bool isTimeForPhoto;
 
 #ifdef FAST_MODE
-  int pvReading = sensorData.dividedPhotoVoltaic;
-  float pvVoltage =
-      (pvReading * AREF * (PV_DIVIDER_SRC + PV_DIVIDER_GND))
-      / (1023 * PV_DIVIDER_GND);
-  int vccReading = sensorData.dividedVcc;
-  float vccVoltage =
-      (vccReading * AREF * (VCC_DIVIDER_SRC + VCC_DIVIDER_GND))
-      / (1023 * VCC_DIVIDER_GND);
-  isTimeForPhoto =
-      t >= nextPhotoSeconds &&
-      pvVoltage >= FAST_MODE_PV_THRESHOLD_V &&
-      vccVoltage >= FAST_MODE_VCC_THRESHOLD_V;
+  if (t < nextPhotoSeconds) {
+    isTimeForPhoto = false;
+  } else {
+    Serial.println("Time for photo.");
+    int pvReading = sensorData.dividedPhotoVoltaic;
+    float pvVoltage =
+        (pvReading * AREF * (PV_DIVIDER_SRC + PV_DIVIDER_GND))
+        / (1023 * PV_DIVIDER_GND);
+    int vccReading = sensorData.dividedVcc;
+    float vccVoltage =
+        (vccReading * AREF * (VCC_DIVIDER_SRC + VCC_DIVIDER_GND))
+        / (1023 * VCC_DIVIDER_GND);
+    if (pvVoltage < FAST_MODE_PV_THRESHOLD_V) {
+      Serial.print("PV voltage ");
+      Serial.print(pvVoltage);
+      Serial.println("v too low, skipping photo.");
+      isTimeForPhoto = false;
+    } else if (vccVoltage < FAST_MODE_VCC_THRESHOLD_V) {
+      Serial.print("VCC voltage ");
+      Serial.print(vccVoltage);
+      Serial.println("v too low, skipping photo.");
+      isTimeForPhoto = false;
+    } else {
+      isTimeForPhoto = true;
+    }
+  }
   while (nextPhotoSeconds <= t) {
     nextPhotoSeconds += PHOTO_INTERVAL_FAST_SECONDS;
   }
