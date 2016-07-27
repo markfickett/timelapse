@@ -68,7 +68,11 @@ void setup() {
 
   readTime();
 
+  // Schedule the next photo in the past, for the most recent 10-minute
+  // increment. This way a photo will be taken immediately, and subsequent
+  // photos will be taken at :00, :10, :20, etc.
   nextPhotoSeconds = sensorData.now.unixtime();
+  nextPhotoSeconds -= nextPhotoSeconds % PHOTO_INTERVAL_FAST_SECONDS;
 
   sdError = false;
   if (!sd.begin(PIN_SPI_CHIP_SELECT_REQUIRED, SPI_QUARTER_SPEED)) {
@@ -139,8 +143,14 @@ bool scheduleNextPhotoGetIsTimeForPhoto() {
   float pvVoltage =
       (pvReading * AREF * (PV_DIVIDER_SRC + PV_DIVIDER_GND))
       / (1023 * PV_DIVIDER_GND);
+  int vccReading = sensorData.dividedVcc;
+  float vccVoltage =
+      (vccReading * AREF * (VCC_DIVIDER_SRC + VCC_DIVIDER_GND))
+      / (1023 * VCC_DIVIDER_GND);
   isTimeForPhoto =
-      t >= nextPhotoSeconds && pvVoltage >= FAST_MODE_PV_THRESHOLD_V;
+      t >= nextPhotoSeconds &&
+      pvVoltage >= FAST_MODE_PV_THRESHOLD_V &&
+      vccVoltage >= FAST_MODE_VCC_THRESHOLD_V;
   while (nextPhotoSeconds <= t) {
     nextPhotoSeconds += PHOTO_INTERVAL_FAST_SECONDS;
   }

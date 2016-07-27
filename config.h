@@ -38,9 +38,11 @@
 // mode (photos at specific times).
 #define FAST_MODE
 #define PHOTO_INTERVAL_FAST_SECONDS (10 * 60)
-// Only take frequent photos when the solar module is providing some voltage,
-// as a proxy for only taking daytime photos.
-#define FAST_MODE_PV_THRESHOLD_V 10
+// Only take frequent photos when the solar module is providing some voltage
+// (as a proxy for only taking daytime photos) and when the battery has enough
+// charge.
+#define FAST_MODE_PV_THRESHOLD_V 10.0
+#define FAST_MODE_VCC_THRESHOLD_V 12.0
 
 #define PIN_DIVIDED_VCC A0
 #define PIN_DIVIDED_PV  A1
