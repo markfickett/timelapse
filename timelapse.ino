@@ -50,6 +50,7 @@ RTC_DS1307 rtc;
 
 char buf[128]; // filenames and data log lines
 SdFat sd;
+boolean sdError;
 SdFile logFile;
 
 void setup() {
@@ -69,8 +70,16 @@ void setup() {
 
   nextPhotoSeconds = sensorData.now.unixtime();
 
+  sdError = false;
   if (!sd.begin(PIN_SPI_CHIP_SELECT_REQUIRED, SPI_QUARTER_SPEED)) {
-    sd.initErrorHalt();
+    sdError = true;
+    sd.initErrorPrint();
+    for (int i = 0; i < 10; i++) {
+      digitalWrite(PIN_STATUS_LED, HIGH);
+      delay(50);
+      digitalWrite(PIN_STATUS_LED, LOW);
+      delay(100);
+    }
   }
   digitalWrite(PIN_STATUS_LED, LOW);
 }
@@ -251,8 +260,9 @@ void writeData() {
       sensorData.now.year(),
       sensorData.now.month(),
       sensorData.now.day());
-  if (!logFile.open(buf, O_CREAT | O_WRITE | O_AT_END)) {
-    sd.errorHalt("Opening logFile failed. ");
+  if (!sdError && !logFile.open(buf, O_CREAT | O_WRITE | O_AT_END)) {
+    sdError = true;
+    sd.errorPrint("Opening logFile failed. ");
   }
 
   obufstream ob(buf, sizeof(buf));
@@ -269,8 +279,9 @@ void writeData() {
       << "\n";
   logFile.print(buf);
 
-  if (!logFile.sync() || logFile.getWriteError()) {
-    sd.errorHalt("Writing logFile failed. ");
+  if (!sdError && !logFile.sync() || logFile.getWriteError()) {
+    sdError = true;
+    sd.errorPrint("Writing logFile failed. ");
   }
   logFile.close();
 }
