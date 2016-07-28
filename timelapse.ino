@@ -211,7 +211,11 @@ void readTemperatureAndHumidity() {
 
 void readVoltages() {
   sensorData.dividedVcc = analogRead(PIN_DIVIDED_VCC);
+#ifdef READ_PV_VOLTAGE
   sensorData.dividedPhotoVoltaic = analogRead(PIN_DIVIDED_PV);
+#else
+  sensorData.dividedPhotoVoltaic = 0;
+#endif
 }
 
 void printDateTime(const DateTime& t) {

@@ -12,6 +12,10 @@
 // This value is passed to Narcoleptic as an int, so must be < INT_MAX (32767).
 #define SLEEP_INTERVAL_MILLIS (30 * 1000)
 
+// Whether to read voltage of the solar panel. Turn this off if the charge
+// controller does not tie the panel's ground to battery/load ground.
+//#define READ_PV_VOLTAGE
+
 // 12v (battery) power supply for the 9V regulator powering the camera.
 #define PIN_CAMERA_POWER_SUPPLY 9
 // Red wire to camera via opto-isolator.
@@ -42,7 +46,11 @@
 // Only take frequent photos when the solar module is providing some voltage
 // (as a proxy for only taking daytime photos) and when the battery has enough
 // charge.
+#ifdef READ_PV_VOLTAGE
 #define FAST_MODE_PV_THRESHOLD_V 10.0
+#else
+#define FAST_MODE_PV_THRESHOLD_V -1
+#endif
 #define FAST_MODE_VCC_THRESHOLD_V 12.0
 
 #define PIN_DIVIDED_VCC A0
