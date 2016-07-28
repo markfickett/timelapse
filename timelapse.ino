@@ -141,6 +141,11 @@ bool scheduleNextPhotoGetIsTimeForPhoto() {
 #ifdef FAST_MODE
   if (t < nextPhotoSeconds) {
     isTimeForPhoto = false;
+  } else if (sensorData.now.hour() > FAST_MODE_NIGHT_AFTER_HOUR &&
+      sensorData.now.hour() < FAST_MODE_NIGHT_BEFORE_HOUR) {
+    Serial.print("Skipping night photo at UTC hour ");
+    Serial.println(sensorData.now.hour());
+    isTimeForPhoto = false;
   } else {
     Serial.println("Time for photo.");
     int pvReading = sensorData.dividedPhotoVoltaic;

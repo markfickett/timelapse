@@ -52,6 +52,16 @@
 #define FAST_MODE_PV_THRESHOLD_V -1
 #endif
 #define FAST_MODE_VCC_THRESHOLD_V 12.0
+// Do not take frequent pictures at night. Night is any hour (UTC) between the
+// two specified, excluding both. So with 0 and 8 (8PM and 4AM EDT),
+//   0:44 is day
+//   1:00 is night
+//   7:58 is night
+//   8:00 is day
+// Values based on summer solstice for the lat/lng of interest.
+// http://aa.usno.navy.mil/data/docs/RS_OneDay.php
+#define FAST_MODE_NIGHT_AFTER_HOUR 0
+#define FAST_MODE_NIGHT_BEFORE_HOUR 8
 
 #define PIN_DIVIDED_VCC A0
 #define PIN_DIVIDED_PV  A1
