@@ -51,6 +51,9 @@
 #else
 #define FAST_MODE_PV_THRESHOLD_V -1
 #endif
+// 11.8v is generally considered a lower limit for safe SLA discharge. Allow a
+// little buffer, since we want to keep logging even if battery voltage is too
+// low to take photos. solarnavigator.net/battery_charging.htm
 #define FAST_MODE_VCC_THRESHOLD_V 12.0
 // Do not take frequent pictures at night. Night is any hour (UTC) between the
 // two specified, excluding both. So with 0 and 8 (8PM and 4AM EDT),
