@@ -13,9 +13,24 @@
 // and written to storage.
 #define PIN_CAMERA_ACTIVITY_SENSE A1
 
+// 500 = normal room, 900 = dim, 950+ = dark
 #define PIN_AMBIENT_LIGHT_SENSE A2
+#define AMBIENT_LIGHT_LEVEL_DARK 950
 
 #define PIN_BATTERY_SENSE A3
+#define AREF 5.0
+
+// 11.8v is generally considered a lower limit for safe SLA discharge. Allow a
+// little buffer, since we want to keep logging even if battery voltage is too
+// low to take photos. solarnavigator.net/battery_charging.htm
+#define VCC_VOLTAGE_LOW 11.8
+
+// Resistor values for battery. Each pair may be scaled together arbitrarily
+// (ex: 4.7 and 1.2 or 47 and 12).
+#define VCC_DIVIDER_SRC 838
+#define VCC_DIVIDER_GND 332
+// Max tolerable Vcc = 17.6v =
+//     AREF * (VCC_DIVIDER_SRC + VCC_DIVIDER_GND) / VCC_DIVIDER_GND
 
 // Threshold for the analog reading for the camera memory-access LED. LED on
 // (writing) is typically 0, and off (done) is typically 300.
@@ -27,17 +42,9 @@
 // exposure (1 minute).
 #define CAMERA_FAILSAFE_WAIT_COUNT_LIMIT 1200
 
-// 11.8v is generally considered a lower limit for safe SLA discharge. Allow a
-// little buffer, since we want to keep logging even if battery voltage is too
-// low to take photos. solarnavigator.net/battery_charging.htm
-
-// Resistor values for battery and photovoltaics. Each pair may be scaled
-// together arbitrarily (ex: 4.7 and 1.2 or 47 and 12).
-#define AREF 5.0
-
 #define PIN_WAKE_BUTTON 2
 #define PIN_CHANGE_BUTTON 3
 
 #define PIN_7SEG_POWER 4
 
-#define BUTTON_DEBOUNCE_MILLIS 100
+#define BUTTON_DEBOUNCE_MILLIS 500

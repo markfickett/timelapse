@@ -23,26 +23,52 @@ RTC_DS1307 rtc;
 Adafruit_7segment display = Adafruit_7segment();
 
 volatile unsigned long buttonPressTimesMillis[2] = {0L, 0L};
-volatile boolean buttonPressed[2] = {false, false};
+volatile boolean buttonPress[2] = {false, false};
 
-void handleWakePressed() { handleButtonPress(0); }
-bool consumeWakePressed() { return consumeButtonPress(0); }
-void handleChangePressed() { handleButtonPress(1); }
-bool consumeChangePressed() { return consumeButtonPress(1); }
-void handleButtonPress(int i) {
-  unsigned long t = millis();
-  if (!buttonPressed[i] &&
-      t - buttonPressTimesMillis[i] > BUTTON_DEBOUNCE_MILLIS) {
-    buttonPressed[i] = true;
-    buttonPressTimesMillis[i] = t;
-  }
-}
+void handleWakePress() { handleButtonPress(0); }
+bool consumeWakePress() { return consumeButtonPress(0); }
+void handleChangePress() { handleButtonPress(1); }
+bool consumeChangePress() { return consumeButtonPress(1); }
 bool consumeButtonPress(int i) {
-  if (buttonPressed[i]) {
-    buttonPressed[i] = false;
+  if (buttonPress[i]) {
+    buttonPress[i] = false;
     return true;
   }
   return false;
+}
+void handleButtonPress(int i) {
+  unsigned long t = millis();
+  if (!buttonPress[i] &&
+      t - buttonPressTimesMillis[i] > BUTTON_DEBOUNCE_MILLIS) {
+    buttonPress[i] = true;
+    buttonPressTimesMillis[i] = t;
+  }
+}
+
+byte charTo7Seg(char c) {
+  switch(c) {
+    case 'C': return 0b00111001;
+    case 'E': return 0b01111001;
+    case 'X':
+    case 'H': return 0b01110110;
+    case 'I': return 0b00110000;
+    case 'L': return 0b00111000;
+    case 'O': return 0b00111111;
+    case 'P': return 0b01110011;
+    case 'S': return 0b01101101;
+    case 'U': return 0b00111110;
+    case 'V': return 0b00111100;
+    case 'a': return 0b11011100;
+    case 'b': return 0b01111100;
+    case 'g': return 0b01101111;
+    case 'h': return 0b01110100;
+    case 'n': return 0b01010100;
+    case 'y': return 0b01101110;
+    case '.': return 0b10000000;
+    case '!': return 0b10000010;
+    default:
+      return 0b11111111;
+  }
 }
 
 void setup() {
@@ -73,17 +99,17 @@ void setup() {
   digitalWrite(PIN_7SEG_POWER, HIGH);
   display.begin(0x70 /* default I2C address */); // also sets max brightness
   display.clear();
-  display.writeDigitRaw(0, 0b01110100); // h
-  display.writeDigitRaw(1, 0b01111001); // E
-  display.writeDigitRaw(3, 0b00111000); // L
-  display.writeDigitRaw(4, 0b10111111); // O.
+  display.writeDigitRaw(0, charTo7Seg('h'));
+  display.writeDigitRaw(1, charTo7Seg('E'));
+  display.writeDigitRaw(3, charTo7Seg('L'));
+  display.writeDigitRaw(4, charTo7Seg('O') | charTo7Seg('.'));
   display.writeDisplay();
   delay(1000);
 
   attachInterrupt(
-      digitalPinToInterrupt(PIN_WAKE_BUTTON), handleWakePressed, FALLING);
+      digitalPinToInterrupt(PIN_WAKE_BUTTON), handleWakePress, FALLING);
   attachInterrupt(
-      digitalPinToInterrupt(PIN_CHANGE_BUTTON), handleChangePressed, FALLING);
+      digitalPinToInterrupt(PIN_CHANGE_BUTTON), handleChangePress, FALLING);
 }
 
 void setTime() {
@@ -92,37 +118,145 @@ void setTime() {
   rtc.adjust(now);
 }
 
-bool colonBlink = false;
-void loop() {
-  DateTime now = rtc.now();  // now.year(), .hour(), etc
+struct EnvironmentData {
+  DateTime now;
+
+  int ambientLightLevel; // raw analogRead value
+  bool ambientIsLight;
+
+  int vccVoltageReading; // raw analogRead value
+  float vccVoltage;
+};
+
+struct EnvironmentData getEnvironmentData() {
+  struct EnvironmentData data;
+  data.now = rtc.now();
+  data.ambientLightLevel = analogRead(PIN_AMBIENT_LIGHT_SENSE);
+  data.ambientIsLight = data.ambientLightLevel < AMBIENT_LIGHT_LEVEL_DARK;
+  data.vccVoltageReading = analogRead(PIN_BATTERY_SENSE);
+  data.vccVoltage =
+      (data.vccVoltageReading * AREF * (VCC_DIVIDER_SRC + VCC_DIVIDER_GND))
+      / (1023 * VCC_DIVIDER_GND);
+  return data;
+}
+
+void debugMode() {
+  struct EnvironmentData data = getEnvironmentData();
+  consumeChangePress();
+
+  // time, UTC
+  bool colonBlink = false;
+  while (!consumeWakePress()) {
+    display.clear();
+    display.writeDigitNum(0, data.now.hour() / 10);
+    display.writeDigitNum(1, data.now.hour() % 10);
+    display.drawColon(colonBlink = !colonBlink);
+    display.writeDigitNum(3, data.now.minute() / 10);
+    display.writeDigitNum(4, data.now.minute() % 10);
+    display.writeDisplay();
+    delay(1000);
+    data = getEnvironmentData();
+  }
+
+  // VCC (battery voltage)
   display.clear();
-  display.println(now.hour() * 100 + now.minute());
-  display.drawColon(colonBlink = !colonBlink);
+  display.writeDigitRaw(0, charTo7Seg('V'));
+  display.writeDigitRaw(1, charTo7Seg('C'));
+  display.writeDigitRaw(3, charTo7Seg('C'));
   display.writeDisplay();
   delay(1000);
+  while (!consumeWakePress()) {
+    display.clear();
+    display.println(data.vccVoltage);
+    display.writeDisplay();
+    delay(100);
+    data = getEnvironmentData();
+  }
 
+  // take a picture
+  while (!consumeWakePress()) {
+    display.clear();
+    display.writeDigitRaw(0, charTo7Seg('P'));
+    display.writeDigitRaw(1, charTo7Seg('I'));
+    display.writeDigitRaw(3, charTo7Seg('C'));
+    display.writeDisplay();
+    if (consumeChangePress()) {
+      takePicture();
+    }
+    delay(50);
+  }
+
+  // ambient light level
+  while (!consumeWakePress()) {
+    display.clear();
+    display.writeDigitRaw(0, charTo7Seg('L'));
+    display.writeDigitRaw(1, charTo7Seg('I'));
+    display.writeDigitRaw(3, charTo7Seg('g'));
+    display.writeDigitRaw(4, charTo7Seg('h'));
+    display.writeDisplay();
+    delay(500);
+    display.clear();
+    if (data.ambientIsLight) {
+      display.writeDigitRaw(0, charTo7Seg('y'));
+      display.writeDigitRaw(1, charTo7Seg('E'));
+      display.writeDigitRaw(3, charTo7Seg('S'));
+    } else {
+      display.writeDigitRaw(1, charTo7Seg('n'));
+      display.writeDigitRaw(3, charTo7Seg('O'));
+    }
+    display.writeDisplay();
+    delay(500);
+    display.clear();
+    display.println(data.ambientLightLevel);
+    display.writeDisplay();
+    delay(1000);
+    data = getEnvironmentData();
+  }
+
+  // TODO next photo time & interval
+
+  display.clear();
+  display.writeDigitRaw(0, charTo7Seg('b'));
+  display.writeDigitRaw(1, charTo7Seg('y'));
+  display.writeDigitRaw(3, charTo7Seg('E'));
+  display.writeDigitRaw(4, charTo7Seg('!'));
+  display.writeDisplay();
+  delay(500);
+  for(int brightness = 15; brightness >= 0; brightness--) {
+    delay(100);
+    display.setBrightness(brightness);
+  }
+  display.clear();
+  display.writeDisplay();
+  display.setBrightness(15);
+}
+
+void checkConditionsMaybeTakePicture() {
+  struct EnvironmentData data = getEnvironmentData();
+  if (data.vccVoltage < VCC_VOLTAGE_LOW || !data.ambientIsLight) {
+    return;
+  }
+  /* TODO
+  if (it's time) {
+    takePicture();
+  }
+  */
+}
+
+void takePicture() {
+  display.clear();
+  display.writeDigitRaw(0, charTo7Seg('E'));
+  display.writeDigitRaw(1, charTo7Seg('X'));
+  display.writeDigitRaw(3, charTo7Seg('P'));
+  display.writeDisplay();
+
+  delay(1000);
   /*
   digitalWrite(PIN_CAMERA_POWER_SUPPLY, HIGH);
   delay(1000);
   digitalWrite(PIN_CAMERA_POWER_SUPPLY, LOW);
   delay(2000);
   */
-
-  if (consumeWakePressed()) {
-    display.clear();
-    display.print(1337);
-    display.writeDisplay();
-    delay(1000);
-  }
-  if (consumeChangePressed()) {
-    display.clear();
-    display.writeDigitRaw(0, 0b00111001); // C
-    display.writeDigitRaw(1, 0b01110100); // h
-    display.writeDigitRaw(3, 0b11011100); // a
-    display.writeDigitRaw(4, 0b01101111); // g
-    display.writeDisplay();
-    delay(1000);
-  }
 
   /*
   digitalWrite(PIN_CAMERA_FOCUS, HIGH);
@@ -137,23 +271,19 @@ void loop() {
   delay(1000);
   */
 
-  display.clear();
-  // 500 = normal room, 900 = dim, 950 = dark
-  display.print(analogRead(PIN_AMBIENT_LIGHT_SENSE));
-  display.writeDisplay();
-  delay(1000);
-
   /*
   digitalWrite(PIN_CAMERA_EXPOSE, HIGH);
   digitalWrite(PIN_CAMERA_EXPOSE, LOW);
   */
-
-  /*
   display.clear();
-  display.print(analogRead(PIN_BATTERY_SENSE));
   display.writeDisplay();
-  delay(1000);
-  */
+}
+
+void loop() {
+  if (consumeWakePress()) {
+    debugMode();
+  }
+  checkConditionsMaybeTakePicture();
 
   lowPowerSleep();
 }
