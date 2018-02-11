@@ -2430,6 +2430,62 @@ part number 2062-2P from STA</description>
 <text x="-1.778" y="-4.826" size="0.6096" layer="27" font="vector" ratio="20">&gt;VALUE</text>
 <wire x1="-3.302" y1="-3.683" x2="-3.302" y2="-2.794" width="0.127" layer="21"/>
 </package>
+<package name="PAD.02X.02">
+<description>&lt;h3&gt;Electrically Conductive Pad 0.02" Square&lt;/h3&gt;
+Used as a test point connection for pogo pins or other debugging tools. 
+&lt;p&gt;Specifications:
+&lt;li&gt;Area: 0.02" x 0.02"&lt;/li&gt;
+&lt;/ul&gt;&lt;/p&gt;
+&lt;p&gt;Example device(s):
+&lt;ul&gt;&lt;li&gt;TEST_POINT&lt;/li&gt;
+&lt;/ul&gt;&lt;/p&gt;</description>
+<smd name="P$1" x="0" y="0" dx="0.508" dy="0.508" layer="1"/>
+</package>
+<package name="PAD.03X.03">
+<description>&lt;h3&gt;Electrically Conductive Pad 0.03" Circle&lt;/h3&gt;
+Used as a test point connection for pogo pins or other debugging tools. 
+&lt;p&gt;Specifications:
+&lt;li&gt;Area: 0.03" x 0.03"&lt;/li&gt;
+&lt;/ul&gt;&lt;/p&gt;
+&lt;p&gt;Example device(s):
+&lt;ul&gt;&lt;li&gt;TEST_POINT&lt;/li&gt;
+&lt;/ul&gt;&lt;/p&gt;</description>
+<smd name="P$1" x="0" y="0" dx="0.762" dy="0.762" layer="1" roundness="100" cream="no"/>
+</package>
+<package name="PAD.03X.05">
+<description>&lt;h3&gt;Electrically Conductive Pad 0.05" Circle&lt;/h3&gt;
+Used as a test point connection for pogo pins or other debugging tools. 
+&lt;p&gt;Specifications:
+&lt;li&gt;Area: 0.05" x 0.05"&lt;/li&gt;
+&lt;/ul&gt;&lt;/p&gt;
+&lt;p&gt;Example device(s):
+&lt;ul&gt;&lt;li&gt;TEST_POINT&lt;/li&gt;
+&lt;/ul&gt;&lt;/p&gt;</description>
+<smd name="P$1" x="0" y="0" dx="1.27" dy="1.27" layer="1" roundness="100" cream="no"/>
+</package>
+<package name="PAD.03X.04">
+<description>&lt;h3&gt;Electrically Conductive Pad 0.04" Circle&lt;/h3&gt;
+Used as a test point connection for pogo pins or other debugging tools. 
+&lt;p&gt;Specifications:
+&lt;li&gt;Area: 0.04" x 0.04"&lt;/li&gt;
+&lt;/ul&gt;&lt;/p&gt;
+&lt;p&gt;Example device(s):
+&lt;ul&gt;&lt;li&gt;TEST_POINT&lt;/li&gt;
+&lt;/ul&gt;&lt;/p&gt;</description>
+<smd name="P$1" x="0" y="0" dx="1.016" dy="1.016" layer="1" roundness="100" cream="no"/>
+</package>
+<package name="TP_15TH">
+<description>&lt;h3&gt;Electrically Conductive Via 0.015" Drill&lt;/h3&gt;
+Used as a test point connection for pogo pins or other debugging tools. 
+&lt;p&gt;Specifications:
+&lt;li&gt;Area:0.015"&lt;/li&gt;
+&lt;/ul&gt;&lt;/p&gt;
+&lt;p&gt;Example device(s):
+&lt;ul&gt;&lt;li&gt;TEST_POINT&lt;/li&gt;
+&lt;/ul&gt;&lt;/p&gt;</description>
+<pad name="P$1" x="0" y="0" drill="0.381" diameter="0.6096" stop="no"/>
+<circle x="0" y="0" radius="0.381" width="0" layer="30"/>
+</package>
 </packages>
 <symbols>
 <symbol name="AVR_SPI_PROGRAMMER_6">
@@ -2520,6 +2576,13 @@ part number 2062-2P from STA</description>
 <wire x1="1.27" y1="-2.54" x2="2.54" y2="-2.54" width="0.6096" layer="94"/>
 <wire x1="1.27" y1="0" x2="2.54" y2="0" width="0.6096" layer="94"/>
 <wire x1="1.27" y1="2.54" x2="2.54" y2="2.54" width="0.6096" layer="94"/>
+</symbol>
+<symbol name="TEST-POINT">
+<wire x1="2.54" y1="0" x2="0" y2="0" width="0.1524" layer="94"/>
+<wire x1="3.302" y1="0.762" x2="3.302" y2="-0.762" width="0.1524" layer="94" curve="180"/>
+<text x="-2.54" y="2.54" size="1.778" layer="95" font="vector">&gt;Name</text>
+<text x="-2.54" y="-2.54" size="1.778" layer="96" font="vector">&gt;Value</text>
+<pin name="1" x="0" y="0" visible="off" length="point" rot="R180"/>
 </symbol>
 </symbols>
 <devicesets>
@@ -3576,6 +3639,60 @@ part number 2062-2P from STA</description>
 <attribute name="PROD_ID" value="CONN-11566"/>
 <attribute name="VALUE" value="FEMALE 2x3"/>
 </technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="TEST-POINT" prefix="TP">
+<description>&lt;h3&gt;SparkFun Test Points&lt;/h3&gt;
+&lt;p&gt;Bare copper test points for troubleshooting or In-Circuit-Testing. These are used by our Production team for verifying production board runs using pogo-pins on test beds.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;SparkFun Products:&lt;/b&gt;
+&lt;ul&gt;&lt;li&gt;&lt;a href=”https://www.sparkfun.com/products/13284”&gt;SparkFun LSM9DS1 Breakout&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=”https://www.sparkfun.com/products/13714”&gt;SparkFun PSOC&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.sparkfun.com/products/13879"&gt;SparkFun Load Cell Amplifier&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/p&gt;</description>
+<gates>
+<gate name="G$1" symbol="TEST-POINT" x="0" y="0"/>
+</gates>
+<devices>
+<device name="2" package="PAD.02X.02">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="3" package="PAD.03X.03">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="3X5" package="PAD.03X.05">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="3X4" package="PAD.03X.04">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="TP_15TH_THRU" package="TP_15TH">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+</connects>
+<technologies>
+<technology name=""/>
 </technologies>
 </device>
 </devices>
@@ -4818,6 +4935,8 @@ Siemens, Hewlett-Packard, Texas Instuments, Sharp, Motorola&lt;p&gt;
 <classes>
 <class number="0" name="default" width="0" drill="0">
 </class>
+<class number="1" name="power" width="0.4064" drill="0">
+</class>
 </classes>
 <parts>
 <part name="ATMEGA328" library="SparkFun-IC-Microcontroller" deviceset="ATMEGA328P_PDIP" device="" value="328P"/>
@@ -4828,37 +4947,49 @@ Siemens, Hewlett-Packard, Texas Instuments, Sharp, Motorola&lt;p&gt;
 <part name="U$2" library="SparkFun-PowerSymbols" deviceset="VCCA" device=""/>
 <part name="RTC" library="SparkFun-Connectors" deviceset="CONN_04" device=""/>
 <part name="U$4" library="SparkFun-PowerSymbols" deviceset="VCCA" device=""/>
-<part name="SUPPLY5" library="SparkFun-PowerSymbols" deviceset="GND2" device=""/>
+<part name="GND" library="SparkFun-PowerSymbols" deviceset="GND2" device=""/>
 <part name="LCD" library="SparkFun-Connectors" deviceset="CONN_04" device=""/>
-<part name="R1" library="SparkFun-Resistors" deviceset="330OHM" device="-HORIZ-1/10W-5%" value="330"/>
-<part name="R2" library="SparkFun-Resistors" deviceset="330OHM" device="-HORIZ-1/10W-5%" value="330"/>
+<part name="REXP330" library="SparkFun-Resistors" deviceset="330OHM" device="-HORIZ-1/10W-5%" value="330"/>
+<part name="RFOC330" library="SparkFun-Resistors" deviceset="330OHM" device="-HORIZ-1/10W-5%" value="330"/>
 <part name="SUPPLY3" library="SparkFun-PowerSymbols" deviceset="GND2" device=""/>
 <part name="CAMCTL" library="SparkFun-Connectors" deviceset="CONN_03" device="" value="455-1750-1-ND"/>
-<part name="Q1" library="SparkFun-DiscreteSemi" deviceset="TRANS_NPN" device="-2N3904" value="200mA/40V"/>
+<part name="QLCD" library="SparkFun-DiscreteSemi" deviceset="TRANS_NPN" device="-2N3904" value="200mA/40V"/>
 <part name="U2" library="_traco_tsr-1" deviceset="TSR_1-*" device="" technology="2450"/>
 <part name="SUPPLY4" library="SparkFun-PowerSymbols" deviceset="GND2" device=""/>
 <part name="VCC1" library="SparkFun-PowerSymbols" deviceset="VCCA" device=""/>
 <part name="BATT" library="SparkFun-Connectors" deviceset="CONN_02" device=""/>
-<part name="R3" library="SparkFun-Resistors" deviceset="10KOHM" device="-HORIZ-1/4W-1%" value="10k"/>
-<part name="R4" library="SparkFun-Resistors" deviceset="10KOHM" device="-HORIZ-1/4W-1%" value="10k"/>
+<part name="RB+820K" library="SparkFun-Resistors" deviceset="10KOHM" device="-HORIZ-1/4W-1%" value="820k"/>
+<part name="RB-360K" library="SparkFun-Resistors" deviceset="10KOHM" device="-HORIZ-1/4W-1%" value="360k"/>
 <part name="Q2" library="SparkFun-DiscreteSemi" deviceset="MOSFET-NCH" device="-FQP30N06L" value="60V/32A/35mΩ"/>
-<part name="R5" library="SparkFun-Resistors" deviceset="330OHM" device="-HORIZ-1/10W-5%" value="330"/>
+<part name="RMF150" library="SparkFun-Resistors" deviceset="330OHM" device="-HORIZ-1/10W-5%" value="150"/>
 <part name="BATTSUPPLY" library="SparkFun-PowerSymbols" deviceset="VCC_2" device=""/>
 <part name="SUPPLY6" library="SparkFun-PowerSymbols" deviceset="GND2" device=""/>
 <part name="PHOTOSENSE" library="SparkFun-Connectors" deviceset="CONN_03X2" device="FEMALE" value="FEMALE 2x3"/>
 <part name="SUPPLY7" library="SparkFun-PowerSymbols" deviceset="GND2" device=""/>
 <part name="VCC2" library="SparkFun-PowerSymbols" deviceset="VCCA" device=""/>
-<part name="R6" library="SparkFun-Resistors" deviceset="10KOHM" device="-HORIZ-1/4W-1%" value="10k"/>
-<part name="R7" library="SparkFun-Resistors" deviceset="10KOHM" device="-HORIZ-1/4W-1%" value="10k"/>
+<part name="RACT10K" library="SparkFun-Resistors" deviceset="10KOHM" device="-HORIZ-1/4W-1%" value="10k"/>
+<part name="RAMB10K" library="SparkFun-Resistors" deviceset="10KOHM" device="-HORIZ-1/4W-1%" value="10k"/>
 <part name="CHANGE" library="adafruit" deviceset="SWITCH_PUSHBUTTON" device="EVQ-PE"/>
 <part name="WAKE" library="adafruit" deviceset="SWITCH_PUSHBUTTON" device="EVQ-PE"/>
 <part name="SUPPLY8" library="SparkFun-PowerSymbols" deviceset="GND2" device=""/>
 <part name="CAMPWR" library="SparkFun-Connectors" deviceset="CONN_03" device=""/>
-<part name="OK1" library="optocoupler-2" deviceset="ILD2" device=""/>
+<part name="OPTO" library="optocoupler-2" deviceset="ILD2" device=""/>
+<part name="RPU30-60K" library="SparkFun-Resistors" deviceset="330OHM" device="-HORIZ-1/10W-5%" value="30-60k"/>
+<part name="RST" library="adafruit" deviceset="SWITCH_PUSHBUTTON" device="EVQ-PE"/>
+<part name="RLCD1K" library="SparkFun-Resistors" deviceset="330OHM" device="-HORIZ-1/10W-5%" value="1k"/>
+<part name="TPBATT" library="SparkFun-Connectors" deviceset="TEST-POINT" device="TP_15TH_THRU"/>
+<part name="TPGND" library="SparkFun-Connectors" deviceset="TEST-POINT" device="TP_15TH_THRU"/>
+<part name="TPDIV" library="SparkFun-Connectors" deviceset="TEST-POINT" device="TP_15TH_THRU"/>
+<part name="TPVREG" library="SparkFun-Connectors" deviceset="TEST-POINT" device="TP_15TH_THRU"/>
 </parts>
 <sheets>
 <sheet>
 <plain>
+<text x="101.6" y="78.74" size="1.778" layer="112" rot="R90">Battery Input
+Max. 16V for 5V AREF</text>
+<text x="160.02" y="71.12" size="1.778" layer="112">Photocells: Bright = ~100Ω
+Light = ~10kΩ
+Dark = ~50kΩ-1MΩ</text>
 </plain>
 <instances>
 <instance part="ATMEGA328" gate="G$1" x="45.72" y="58.42"/>
@@ -4866,42 +4997,49 @@ Siemens, Hewlett-Packard, Texas Instuments, Sharp, Motorola&lt;p&gt;
 <instance part="SUPPLY1" gate="GND" x="5.08" y="71.12"/>
 <instance part="SUPPLY2" gate="GND" x="17.78" y="22.86"/>
 <instance part="VCC" gate="G$1" x="5.08" y="83.82"/>
-<instance part="U$2" gate="G$1" x="15.24" y="96.52"/>
+<instance part="U$2" gate="G$1" x="12.7" y="96.52"/>
 <instance part="RTC" gate="G$1" x="-10.16" y="10.16"/>
 <instance part="U$4" gate="G$1" x="10.16" y="58.42"/>
-<instance part="SUPPLY5" gate="GND" x="5.08" y="2.54"/>
+<instance part="GND" gate="GND" x="5.08" y="2.54"/>
 <instance part="LCD" gate="G$1" x="-10.16" y="48.26"/>
-<instance part="R1" gate="G$1" x="104.14" y="43.18"/>
-<instance part="R2" gate="G$1" x="104.14" y="60.96"/>
+<instance part="REXP330" gate="G$1" x="104.14" y="43.18"/>
+<instance part="RFOC330" gate="G$1" x="104.14" y="60.96"/>
 <instance part="SUPPLY3" gate="GND" x="109.22" y="27.94"/>
 <instance part="CAMCTL" gate="J$1" x="116.84" y="15.24"/>
-<instance part="Q1" gate="G$1" x="2.54" y="38.1"/>
+<instance part="QLCD" gate="G$1" x="2.54" y="38.1"/>
 <instance part="U2" gate="G$1" x="121.92" y="111.76"/>
 <instance part="SUPPLY4" gate="GND" x="121.92" y="99.06"/>
 <instance part="VCC1" gate="G$1" x="137.16" y="114.3"/>
 <instance part="BATT" gate="G$1" x="96.52" y="109.22"/>
-<instance part="R3" gate="G$1" x="106.68" y="93.98" rot="R90"/>
-<instance part="R4" gate="G$1" x="114.3" y="93.98" rot="R90"/>
+<instance part="RB+820K" gate="G$1" x="106.68" y="93.98" rot="R90"/>
+<instance part="RB-360K" gate="G$1" x="114.3" y="93.98" rot="R90"/>
 <instance part="Q2" gate="NMOS" x="71.12" y="101.6"/>
-<instance part="R5" gate="G$1" x="58.42" y="99.06"/>
+<instance part="RMF150" gate="G$1" x="58.42" y="99.06"/>
 <instance part="BATTSUPPLY" gate="G$1" x="106.68" y="121.92"/>
 <instance part="SUPPLY6" gate="GND" x="73.66" y="91.44"/>
 <instance part="PHOTOSENSE" gate="G$1" x="162.56" y="91.44"/>
 <instance part="SUPPLY7" gate="GND" x="152.4" y="73.66"/>
 <instance part="VCC2" gate="G$1" x="157.48" y="101.6"/>
-<instance part="R6" gate="G$1" x="142.24" y="93.98"/>
-<instance part="R7" gate="G$1" x="182.88" y="93.98"/>
+<instance part="RACT10K" gate="G$1" x="142.24" y="93.98"/>
+<instance part="RAMB10K" gate="G$1" x="182.88" y="93.98"/>
 <instance part="CHANGE" gate="G$1" x="76.2" y="15.24"/>
 <instance part="WAKE" gate="G$1" x="76.2" y="7.62"/>
 <instance part="SUPPLY8" gate="GND" x="68.58" y="0"/>
 <instance part="CAMPWR" gate="J$1" x="86.36" y="109.22" rot="MR0"/>
-<instance part="OK1" gate="A" x="121.92" y="58.42"/>
-<instance part="OK1" gate="B" x="121.92" y="40.64"/>
+<instance part="OPTO" gate="A" x="121.92" y="58.42"/>
+<instance part="OPTO" gate="B" x="121.92" y="40.64"/>
+<instance part="RPU30-60K" gate="G$1" x="17.78" y="88.9" rot="R90"/>
+<instance part="RST" gate="G$1" x="27.94" y="93.98"/>
+<instance part="RLCD1K" gate="G$1" x="-7.62" y="38.1"/>
+<instance part="TPBATT" gate="G$1" x="160.02" y="53.34"/>
+<instance part="TPGND" gate="G$1" x="160.02" y="45.72"/>
+<instance part="TPDIV" gate="G$1" x="160.02" y="38.1"/>
+<instance part="TPVREG" gate="G$1" x="160.02" y="60.96"/>
 </instances>
 <busses>
 </busses>
 <nets>
-<net name="VCCA" class="0">
+<net name="VCCA" class="1">
 <segment>
 <pinref part="SPI" gate="G$1" pin="2"/>
 <pinref part="VCC" gate="G$1" pin="VCCA"/>
@@ -4910,8 +5048,20 @@ Siemens, Hewlett-Packard, Texas Instuments, Sharp, Motorola&lt;p&gt;
 <segment>
 <pinref part="ATMEGA328" gate="G$1" pin="VCC"/>
 <pinref part="U$2" gate="G$1" pin="VCCA"/>
-<wire x1="22.86" y1="76.2" x2="15.24" y2="76.2" width="0.1524" layer="91"/>
-<wire x1="15.24" y1="76.2" x2="15.24" y2="96.52" width="0.1524" layer="91"/>
+<wire x1="22.86" y1="76.2" x2="12.7" y2="76.2" width="0.1524" layer="91"/>
+<wire x1="12.7" y1="76.2" x2="12.7" y2="78.74" width="0.1524" layer="91"/>
+<pinref part="ATMEGA328" gate="G$1" pin="AVCC"/>
+<wire x1="12.7" y1="78.74" x2="12.7" y2="93.98" width="0.1524" layer="91"/>
+<wire x1="12.7" y1="93.98" x2="12.7" y2="96.52" width="0.1524" layer="91"/>
+<wire x1="22.86" y1="78.74" x2="12.7" y2="78.74" width="0.1524" layer="91"/>
+<junction x="12.7" y="78.74"/>
+<pinref part="RPU30-60K" gate="G$1" pin="2"/>
+<wire x1="17.78" y1="93.98" x2="12.7" y2="93.98" width="0.1524" layer="91"/>
+<junction x="12.7" y="93.98"/>
+<pinref part="ATMEGA328" gate="G$1" pin="AREF"/>
+<wire x1="22.86" y1="68.58" x2="12.7" y2="68.58" width="0.1524" layer="91"/>
+<wire x1="12.7" y1="68.58" x2="12.7" y2="76.2" width="0.1524" layer="91"/>
+<junction x="12.7" y="76.2"/>
 </segment>
 <segment>
 <pinref part="RTC" gate="G$1" pin="3"/>
@@ -4930,92 +5080,19 @@ Siemens, Hewlett-Packard, Texas Instuments, Sharp, Motorola&lt;p&gt;
 <wire x1="137.16" y1="111.76" x2="137.16" y2="114.3" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="R7" gate="G$1" pin="2"/>
+<pinref part="RAMB10K" gate="G$1" pin="2"/>
 <pinref part="VCC2" gate="G$1" pin="VCCA"/>
 <wire x1="187.96" y1="93.98" x2="187.96" y2="101.6" width="0.1524" layer="91"/>
 <wire x1="187.96" y1="101.6" x2="157.48" y2="101.6" width="0.1524" layer="91"/>
-<pinref part="R6" gate="G$1" pin="1"/>
+<pinref part="RACT10K" gate="G$1" pin="1"/>
 <wire x1="137.16" y1="93.98" x2="137.16" y2="101.6" width="0.1524" layer="91"/>
 <wire x1="137.16" y1="101.6" x2="157.48" y2="101.6" width="0.1524" layer="91"/>
 <junction x="157.48" y="101.6"/>
 </segment>
-</net>
-<net name="3.3V" class="0">
 <segment>
-<pinref part="SPI" gate="G$1" pin="6"/>
-<pinref part="SUPPLY1" gate="GND" pin="3.3V"/>
-<wire x1="0" y1="78.74" x2="5.08" y2="78.74" width="0.1524" layer="91"/>
-<wire x1="5.08" y1="78.74" x2="5.08" y2="73.66" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="ATMEGA328" gate="G$1" pin="GND@1"/>
-<pinref part="SUPPLY2" gate="GND" pin="3.3V"/>
-<wire x1="22.86" y1="30.48" x2="17.78" y2="30.48" width="0.1524" layer="91"/>
-<wire x1="17.78" y1="30.48" x2="17.78" y2="27.94" width="0.1524" layer="91"/>
-<pinref part="ATMEGA328" gate="G$1" pin="GND@2"/>
-<wire x1="17.78" y1="27.94" x2="17.78" y2="25.4" width="0.1524" layer="91"/>
-<wire x1="22.86" y1="27.94" x2="17.78" y2="27.94" width="0.1524" layer="91"/>
-<junction x="17.78" y="27.94"/>
-</segment>
-<segment>
-<pinref part="RTC" gate="G$1" pin="4"/>
-<wire x1="-5.08" y1="15.24" x2="5.08" y2="15.24" width="0.1524" layer="91"/>
-<pinref part="SUPPLY5" gate="GND" pin="3.3V"/>
-<wire x1="5.08" y1="15.24" x2="5.08" y2="5.08" width="0.1524" layer="91"/>
-<pinref part="Q1" gate="G$1" pin="E"/>
-<wire x1="5.08" y1="33.02" x2="5.08" y2="15.24" width="0.1524" layer="91"/>
-<junction x="5.08" y="15.24"/>
-</segment>
-<segment>
-<pinref part="SUPPLY4" gate="GND" pin="3.3V"/>
-<pinref part="U2" gate="G$1" pin="GND"/>
-<wire x1="121.92" y1="101.6" x2="121.92" y2="104.14" width="0.1524" layer="91"/>
-<pinref part="BATT" gate="G$1" pin="1"/>
-<wire x1="104.14" y1="109.22" x2="109.22" y2="109.22" width="0.1524" layer="91"/>
-<wire x1="109.22" y1="109.22" x2="109.22" y2="104.14" width="0.1524" layer="91"/>
-<wire x1="109.22" y1="104.14" x2="114.3" y2="104.14" width="0.1524" layer="91"/>
-<junction x="121.92" y="104.14"/>
-<pinref part="R4" gate="G$1" pin="2"/>
-<wire x1="114.3" y1="104.14" x2="121.92" y2="104.14" width="0.1524" layer="91"/>
-<wire x1="114.3" y1="99.06" x2="114.3" y2="104.14" width="0.1524" layer="91"/>
-<junction x="114.3" y="104.14"/>
-</segment>
-<segment>
-<pinref part="Q2" gate="NMOS" pin="S"/>
-<pinref part="SUPPLY6" gate="GND" pin="3.3V"/>
-<wire x1="73.66" y1="96.52" x2="73.66" y2="93.98" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="PHOTOSENSE" gate="G$1" pin="3"/>
-<wire x1="154.94" y1="91.44" x2="152.4" y2="91.44" width="0.1524" layer="91"/>
-<pinref part="SUPPLY7" gate="GND" pin="3.3V"/>
-<wire x1="152.4" y1="91.44" x2="152.4" y2="81.28" width="0.1524" layer="91"/>
-<pinref part="PHOTOSENSE" gate="G$1" pin="4"/>
-<wire x1="152.4" y1="81.28" x2="152.4" y2="76.2" width="0.1524" layer="91"/>
-<wire x1="170.18" y1="91.44" x2="172.72" y2="91.44" width="0.1524" layer="91"/>
-<wire x1="172.72" y1="91.44" x2="172.72" y2="81.28" width="0.1524" layer="91"/>
-<wire x1="172.72" y1="81.28" x2="152.4" y2="81.28" width="0.1524" layer="91"/>
-<junction x="152.4" y="81.28"/>
-</segment>
-<segment>
-<pinref part="CHANGE" gate="G$1" pin="P$1"/>
-<wire x1="71.12" y1="15.24" x2="68.58" y2="15.24" width="0.1524" layer="91"/>
-<pinref part="SUPPLY8" gate="GND" pin="3.3V"/>
-<wire x1="68.58" y1="15.24" x2="68.58" y2="7.62" width="0.1524" layer="91"/>
-<pinref part="WAKE" gate="G$1" pin="P$1"/>
-<wire x1="68.58" y1="7.62" x2="68.58" y2="2.54" width="0.1524" layer="91"/>
-<wire x1="71.12" y1="7.62" x2="68.58" y2="7.62" width="0.1524" layer="91"/>
-<junction x="68.58" y="7.62"/>
-</segment>
-<segment>
-<pinref part="OK1" gate="A" pin="C"/>
-<wire x1="111.76" y1="55.88" x2="109.22" y2="55.88" width="0.1524" layer="91"/>
-<pinref part="SUPPLY3" gate="GND" pin="3.3V"/>
-<wire x1="109.22" y1="55.88" x2="109.22" y2="38.1" width="0.1524" layer="91"/>
-<pinref part="OK1" gate="B" pin="C"/>
-<wire x1="109.22" y1="38.1" x2="109.22" y2="30.48" width="0.1524" layer="91"/>
-<wire x1="111.76" y1="38.1" x2="109.22" y2="38.1" width="0.1524" layer="91"/>
-<junction x="109.22" y="38.1"/>
+<pinref part="TPVREG" gate="G$1" pin="1"/>
+<wire x1="160.02" y1="60.96" x2="147.32" y2="60.96" width="0.1524" layer="91"/>
+<label x="147.32" y="60.96" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="MOSI" class="0">
@@ -5088,18 +5165,90 @@ Siemens, Hewlett-Packard, Texas Instuments, Sharp, Motorola&lt;p&gt;
 <label x="-5.08" y="48.26" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="GND" class="0">
+<net name="GND" class="1">
 <segment>
-<pinref part="CAMCTL" gate="J$1" pin="3"/>
-<wire x1="124.46" y1="17.78" x2="132.08" y2="17.78" width="0.1524" layer="91"/>
-<label x="124.46" y="17.78" size="1.778" layer="95"/>
-<pinref part="OK1" gate="B" pin="EMIT"/>
-<wire x1="129.54" y1="38.1" x2="132.08" y2="38.1" width="0.1524" layer="91"/>
-<wire x1="132.08" y1="38.1" x2="132.08" y2="17.78" width="0.1524" layer="91"/>
-<pinref part="OK1" gate="A" pin="EMIT"/>
-<wire x1="129.54" y1="55.88" x2="132.08" y2="55.88" width="0.1524" layer="91"/>
-<wire x1="132.08" y1="55.88" x2="132.08" y2="38.1" width="0.1524" layer="91"/>
-<junction x="132.08" y="38.1"/>
+<pinref part="RTC" gate="G$1" pin="4"/>
+<wire x1="-5.08" y1="15.24" x2="5.08" y2="15.24" width="0.1524" layer="91"/>
+<pinref part="GND" gate="GND" pin="3.3V"/>
+<wire x1="5.08" y1="15.24" x2="5.08" y2="5.08" width="0.1524" layer="91"/>
+<pinref part="QLCD" gate="G$1" pin="E"/>
+<wire x1="5.08" y1="33.02" x2="5.08" y2="15.24" width="0.1524" layer="91"/>
+<junction x="5.08" y="15.24"/>
+</segment>
+<segment>
+<pinref part="CHANGE" gate="G$1" pin="P$1"/>
+<wire x1="71.12" y1="15.24" x2="68.58" y2="15.24" width="0.1524" layer="91"/>
+<pinref part="SUPPLY8" gate="GND" pin="3.3V"/>
+<wire x1="68.58" y1="15.24" x2="68.58" y2="7.62" width="0.1524" layer="91"/>
+<pinref part="WAKE" gate="G$1" pin="P$1"/>
+<wire x1="68.58" y1="7.62" x2="68.58" y2="2.54" width="0.1524" layer="91"/>
+<wire x1="71.12" y1="7.62" x2="68.58" y2="7.62" width="0.1524" layer="91"/>
+<junction x="68.58" y="7.62"/>
+</segment>
+<segment>
+<pinref part="SPI" gate="G$1" pin="6"/>
+<pinref part="SUPPLY1" gate="GND" pin="3.3V"/>
+<wire x1="0" y1="78.74" x2="5.08" y2="78.74" width="0.1524" layer="91"/>
+<wire x1="5.08" y1="78.74" x2="5.08" y2="73.66" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="Q2" gate="NMOS" pin="S"/>
+<pinref part="SUPPLY6" gate="GND" pin="3.3V"/>
+<wire x1="73.66" y1="96.52" x2="73.66" y2="93.98" width="0.1524" layer="91"/>
+<pinref part="RST" gate="G$1" pin="P$2"/>
+<wire x1="33.02" y1="93.98" x2="73.66" y2="93.98" width="0.1524" layer="91"/>
+<junction x="73.66" y="93.98"/>
+</segment>
+<segment>
+<pinref part="SUPPLY4" gate="GND" pin="3.3V"/>
+<pinref part="U2" gate="G$1" pin="GND"/>
+<wire x1="121.92" y1="101.6" x2="121.92" y2="104.14" width="0.1524" layer="91"/>
+<pinref part="BATT" gate="G$1" pin="1"/>
+<wire x1="104.14" y1="109.22" x2="109.22" y2="109.22" width="0.1524" layer="91"/>
+<wire x1="109.22" y1="109.22" x2="109.22" y2="104.14" width="0.1524" layer="91"/>
+<wire x1="109.22" y1="104.14" x2="114.3" y2="104.14" width="0.1524" layer="91"/>
+<junction x="121.92" y="104.14"/>
+<pinref part="RB-360K" gate="G$1" pin="2"/>
+<wire x1="114.3" y1="104.14" x2="121.92" y2="104.14" width="0.1524" layer="91"/>
+<wire x1="114.3" y1="99.06" x2="114.3" y2="104.14" width="0.1524" layer="91"/>
+<junction x="114.3" y="104.14"/>
+</segment>
+<segment>
+<pinref part="SUPPLY7" gate="GND" pin="3.3V"/>
+<wire x1="152.4" y1="88.9" x2="152.4" y2="81.28" width="0.1524" layer="91"/>
+<wire x1="152.4" y1="81.28" x2="152.4" y2="76.2" width="0.1524" layer="91"/>
+<wire x1="172.72" y1="88.9" x2="172.72" y2="81.28" width="0.1524" layer="91"/>
+<wire x1="172.72" y1="81.28" x2="152.4" y2="81.28" width="0.1524" layer="91"/>
+<junction x="152.4" y="81.28"/>
+<pinref part="PHOTOSENSE" gate="G$1" pin="5"/>
+<wire x1="154.94" y1="88.9" x2="152.4" y2="88.9" width="0.1524" layer="91"/>
+<pinref part="PHOTOSENSE" gate="G$1" pin="6"/>
+<wire x1="170.18" y1="88.9" x2="172.72" y2="88.9" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="OPTO" gate="A" pin="C"/>
+<wire x1="111.76" y1="55.88" x2="109.22" y2="55.88" width="0.1524" layer="91"/>
+<pinref part="SUPPLY3" gate="GND" pin="3.3V"/>
+<wire x1="109.22" y1="55.88" x2="109.22" y2="38.1" width="0.1524" layer="91"/>
+<pinref part="OPTO" gate="B" pin="C"/>
+<wire x1="109.22" y1="38.1" x2="109.22" y2="30.48" width="0.1524" layer="91"/>
+<wire x1="111.76" y1="38.1" x2="109.22" y2="38.1" width="0.1524" layer="91"/>
+<junction x="109.22" y="38.1"/>
+</segment>
+<segment>
+<pinref part="ATMEGA328" gate="G$1" pin="GND@1"/>
+<pinref part="SUPPLY2" gate="GND" pin="3.3V"/>
+<wire x1="22.86" y1="30.48" x2="17.78" y2="30.48" width="0.1524" layer="91"/>
+<wire x1="17.78" y1="30.48" x2="17.78" y2="27.94" width="0.1524" layer="91"/>
+<pinref part="ATMEGA328" gate="G$1" pin="GND@2"/>
+<wire x1="17.78" y1="27.94" x2="17.78" y2="25.4" width="0.1524" layer="91"/>
+<wire x1="22.86" y1="27.94" x2="17.78" y2="27.94" width="0.1524" layer="91"/>
+<junction x="17.78" y="27.94"/>
+</segment>
+<segment>
+<pinref part="TPGND" gate="G$1" pin="1"/>
+<wire x1="160.02" y1="45.72" x2="149.86" y2="45.72" width="0.1524" layer="91"/>
+<label x="147.32" y="45.72" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="EXPOSE" class="0">
@@ -5107,7 +5256,7 @@ Siemens, Hewlett-Packard, Texas Instuments, Sharp, Motorola&lt;p&gt;
 <pinref part="CAMCTL" gate="J$1" pin="2"/>
 <wire x1="124.46" y1="15.24" x2="134.62" y2="15.24" width="0.1524" layer="91"/>
 <label x="124.46" y="15.24" size="1.778" layer="95"/>
-<pinref part="OK1" gate="B" pin="COL"/>
+<pinref part="OPTO" gate="B" pin="COL"/>
 <wire x1="129.54" y1="43.18" x2="134.62" y2="43.18" width="0.1524" layer="91"/>
 <wire x1="134.62" y1="43.18" x2="134.62" y2="15.24" width="0.1524" layer="91"/>
 </segment>
@@ -5117,16 +5266,16 @@ Siemens, Hewlett-Packard, Texas Instuments, Sharp, Motorola&lt;p&gt;
 <pinref part="CAMCTL" gate="J$1" pin="1"/>
 <wire x1="124.46" y1="12.7" x2="137.16" y2="12.7" width="0.1524" layer="91"/>
 <label x="124.46" y="12.7" size="1.778" layer="95"/>
-<pinref part="OK1" gate="A" pin="COL"/>
+<pinref part="OPTO" gate="A" pin="COL"/>
 <wire x1="129.54" y1="60.96" x2="137.16" y2="60.96" width="0.1524" layer="91"/>
 <wire x1="137.16" y1="60.96" x2="137.16" y2="12.7" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$5" class="0">
+<net name="N$5" class="1">
 <segment>
 <pinref part="LCD" gate="G$1" pin="3"/>
 <wire x1="-5.08" y1="50.8" x2="5.08" y2="50.8" width="0.1524" layer="91"/>
-<pinref part="Q1" gate="G$1" pin="C"/>
+<pinref part="QLCD" gate="G$1" pin="C"/>
 <wire x1="5.08" y1="50.8" x2="5.08" y2="43.18" width="0.1524" layer="91"/>
 </segment>
 </net>
@@ -5137,17 +5286,17 @@ Siemens, Hewlett-Packard, Texas Instuments, Sharp, Motorola&lt;p&gt;
 <wire x1="71.12" y1="50.8" x2="78.74" y2="50.8" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="Q1" gate="G$1" pin="B"/>
-<wire x1="0" y1="38.1" x2="-5.08" y2="38.1" width="0.1524" layer="91"/>
-<label x="-5.08" y="38.1" size="1.778" layer="95"/>
+<pinref part="RLCD1K" gate="G$1" pin="1"/>
+<wire x1="-12.7" y1="38.1" x2="-15.24" y2="38.1" width="0.1524" layer="91"/>
+<label x="-15.24" y="38.1" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="VCC2" class="0">
+<net name="BATVCC" class="1">
 <segment>
 <pinref part="U2" gate="G$1" pin="VI"/>
 <pinref part="BATT" gate="G$1" pin="2"/>
 <wire x1="104.14" y1="111.76" x2="106.68" y2="111.76" width="0.1524" layer="91"/>
-<pinref part="R3" gate="G$1" pin="2"/>
+<pinref part="RB+820K" gate="G$1" pin="2"/>
 <wire x1="106.68" y1="111.76" x2="111.76" y2="111.76" width="0.1524" layer="91"/>
 <wire x1="106.68" y1="99.06" x2="106.68" y2="111.76" width="0.1524" layer="91"/>
 <junction x="106.68" y="111.76"/>
@@ -5160,24 +5309,34 @@ Siemens, Hewlett-Packard, Texas Instuments, Sharp, Motorola&lt;p&gt;
 <wire x1="73.66" y1="119.38" x2="106.68" y2="119.38" width="0.1524" layer="91"/>
 <junction x="106.68" y="119.38"/>
 </segment>
+<segment>
+<pinref part="TPBATT" gate="G$1" pin="1"/>
+<wire x1="160.02" y1="53.34" x2="149.86" y2="53.34" width="0.1524" layer="91"/>
+<label x="147.32" y="53.34" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="BATTSENSE" class="0">
 <segment>
-<pinref part="R4" gate="G$1" pin="1"/>
+<pinref part="RB-360K" gate="G$1" pin="1"/>
 <wire x1="114.3" y1="88.9" x2="114.3" y2="76.2" width="0.1524" layer="91"/>
 <pinref part="ATMEGA328" gate="G$1" pin="PC3(ADC3)"/>
 <wire x1="114.3" y1="76.2" x2="106.68" y2="76.2" width="0.1524" layer="91"/>
-<pinref part="R3" gate="G$1" pin="1"/>
+<pinref part="RB+820K" gate="G$1" pin="1"/>
 <wire x1="106.68" y1="76.2" x2="71.12" y2="76.2" width="0.1524" layer="91"/>
 <wire x1="106.68" y1="88.9" x2="106.68" y2="76.2" width="0.1524" layer="91"/>
 <junction x="106.68" y="76.2"/>
 <label x="76.2" y="76.2" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="TPDIV" gate="G$1" pin="1"/>
+<wire x1="160.02" y1="38.1" x2="149.86" y2="38.1" width="0.1524" layer="91"/>
+<label x="142.24" y="38.1" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="N$6" class="0">
 <segment>
 <pinref part="Q2" gate="NMOS" pin="G"/>
-<pinref part="R5" gate="G$1" pin="2"/>
+<pinref part="RMF150" gate="G$1" pin="2"/>
 <wire x1="66.04" y1="99.06" x2="63.5" y2="99.06" width="0.1524" layer="91"/>
 </segment>
 </net>
@@ -5189,7 +5348,7 @@ Siemens, Hewlett-Packard, Texas Instuments, Sharp, Motorola&lt;p&gt;
 </segment>
 <segment>
 <pinref part="PHOTOSENSE" gate="G$1" pin="2"/>
-<pinref part="R7" gate="G$1" pin="1"/>
+<pinref part="RAMB10K" gate="G$1" pin="1"/>
 <wire x1="170.18" y1="93.98" x2="175.26" y2="93.98" width="0.1524" layer="91"/>
 <wire x1="175.26" y1="93.98" x2="177.8" y2="93.98" width="0.1524" layer="91"/>
 <wire x1="175.26" y1="93.98" x2="175.26" y2="86.36" width="0.1524" layer="91"/>
@@ -5205,7 +5364,7 @@ Siemens, Hewlett-Packard, Texas Instuments, Sharp, Motorola&lt;p&gt;
 <label x="76.2" y="81.28" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="R6" gate="G$1" pin="2"/>
+<pinref part="RACT10K" gate="G$1" pin="2"/>
 <pinref part="PHOTOSENSE" gate="G$1" pin="1"/>
 <wire x1="147.32" y1="93.98" x2="149.86" y2="93.98" width="0.1524" layer="91"/>
 <wire x1="149.86" y1="93.98" x2="154.94" y2="93.98" width="0.1524" layer="91"/>
@@ -5215,19 +5374,21 @@ Siemens, Hewlett-Packard, Texas Instuments, Sharp, Motorola&lt;p&gt;
 <label x="134.62" y="86.36" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="N$3" class="0">
+<net name="D7" class="0">
 <segment>
-<pinref part="R1" gate="G$1" pin="1"/>
+<pinref part="REXP330" gate="G$1" pin="1"/>
 <pinref part="ATMEGA328" gate="G$1" pin="PD7(AIN1)"/>
 <wire x1="99.06" y1="43.18" x2="71.12" y2="43.18" width="0.1524" layer="91"/>
+<label x="93.98" y="43.18" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="N$4" class="0">
+<net name="D6" class="0">
 <segment>
-<pinref part="R2" gate="G$1" pin="1"/>
+<pinref part="RFOC330" gate="G$1" pin="1"/>
 <pinref part="ATMEGA328" gate="G$1" pin="PD6(AIN0)"/>
 <wire x1="99.06" y1="60.96" x2="99.06" y2="45.72" width="0.1524" layer="91"/>
 <wire x1="99.06" y1="45.72" x2="71.12" y2="45.72" width="0.1524" layer="91"/>
+<label x="93.98" y="45.72" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="N$7" class="0">
@@ -5247,7 +5408,7 @@ Siemens, Hewlett-Packard, Texas Instuments, Sharp, Motorola&lt;p&gt;
 <wire x1="83.82" y1="7.62" x2="81.28" y2="7.62" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$9" class="0">
+<net name="N$9" class="1">
 <segment>
 <pinref part="Q2" gate="NMOS" pin="D"/>
 <pinref part="CAMPWR" gate="J$1" pin="1"/>
@@ -5261,23 +5422,60 @@ Siemens, Hewlett-Packard, Texas Instuments, Sharp, Motorola&lt;p&gt;
 <label x="76.2" y="48.26" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="R5" gate="G$1" pin="1"/>
+<pinref part="RMF150" gate="G$1" pin="1"/>
 <wire x1="43.18" y1="99.06" x2="53.34" y2="99.06" width="0.1524" layer="91"/>
 <label x="45.72" y="99.06" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="N$1" class="0">
 <segment>
-<pinref part="R2" gate="G$1" pin="2"/>
-<pinref part="OK1" gate="A" pin="A"/>
+<pinref part="RFOC330" gate="G$1" pin="2"/>
+<pinref part="OPTO" gate="A" pin="A"/>
 <wire x1="109.22" y1="60.96" x2="111.76" y2="60.96" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$2" class="0">
 <segment>
-<pinref part="R1" gate="G$1" pin="2"/>
-<pinref part="OK1" gate="B" pin="A"/>
+<pinref part="REXP330" gate="G$1" pin="2"/>
+<pinref part="OPTO" gate="B" pin="A"/>
 <wire x1="109.22" y1="43.18" x2="111.76" y2="43.18" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="CAMGND" class="0">
+<segment>
+<pinref part="CAMCTL" gate="J$1" pin="3"/>
+<wire x1="124.46" y1="17.78" x2="132.08" y2="17.78" width="0.1524" layer="91"/>
+<label x="124.46" y="17.78" size="1.778" layer="95"/>
+<pinref part="OPTO" gate="B" pin="EMIT"/>
+<wire x1="129.54" y1="38.1" x2="132.08" y2="38.1" width="0.1524" layer="91"/>
+<wire x1="132.08" y1="38.1" x2="132.08" y2="17.78" width="0.1524" layer="91"/>
+<pinref part="OPTO" gate="A" pin="EMIT"/>
+<wire x1="129.54" y1="55.88" x2="132.08" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="132.08" y1="55.88" x2="132.08" y2="38.1" width="0.1524" layer="91"/>
+<junction x="132.08" y="38.1"/>
+</segment>
+</net>
+<net name="RST" class="0">
+<segment>
+<pinref part="ATMEGA328" gate="G$1" pin="PC6(/RESET)"/>
+<pinref part="RPU30-60K" gate="G$1" pin="1"/>
+<wire x1="22.86" y1="83.82" x2="17.78" y2="83.82" width="0.1524" layer="91"/>
+<pinref part="RST" gate="G$1" pin="P$1"/>
+<wire x1="22.86" y1="83.82" x2="22.86" y2="93.98" width="0.1524" layer="91"/>
+<junction x="22.86" y="83.82"/>
+<label x="17.78" y="81.28" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="SPI" gate="G$1" pin="5"/>
+<wire x1="-17.78" y1="78.74" x2="-25.4" y2="78.74" width="0.1524" layer="91"/>
+<label x="-25.4" y="78.74" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="N$3" class="0">
+<segment>
+<pinref part="QLCD" gate="G$1" pin="B"/>
+<pinref part="RLCD1K" gate="G$1" pin="2"/>
+<wire x1="0" y1="38.1" x2="-2.54" y2="38.1" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
@@ -5285,4 +5483,10 @@ Siemens, Hewlett-Packard, Texas Instuments, Sharp, Motorola&lt;p&gt;
 </sheets>
 </schematic>
 </drawing>
+<compatibility>
+<note version="6.3" minversion="6.2.2" severity="warning">
+Since Version 6.2.2 text objects can contain more than one line,
+which will not be processed correctly with this version.
+</note>
+</compatibility>
 </eagle>
