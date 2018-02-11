@@ -18,7 +18,8 @@
 #define AMBIENT_LIGHT_LEVEL_DARK 950
 
 #define PIN_BATTERY_SENSE A3
-#define AREF 5.0
+// nominally 5v
+#define AREF 4.984
 
 // 11.8v is generally considered a lower limit for safe SLA discharge. Allow a
 // little buffer, since we want to keep logging even if battery voltage is too
@@ -26,9 +27,9 @@
 #define VCC_VOLTAGE_LOW 11.8
 
 // Resistor values for battery. Each pair may be scaled together arbitrarily
-// (ex: 4.7 and 1.2 or 47 and 12).
-#define VCC_DIVIDER_SRC 838
-#define VCC_DIVIDER_GND 332
+// (ex: 4.7 and 1.2 or 47 and 12). Keep these as floats, for arithematic.
+#define VCC_DIVIDER_SRC 838.0
+#define VCC_DIVIDER_GND 332.0
 // Max tolerable Vcc = 17.6v =
 //     AREF * (VCC_DIVIDER_SRC + VCC_DIVIDER_GND) / VCC_DIVIDER_GND
 

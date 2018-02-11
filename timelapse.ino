@@ -135,8 +135,10 @@ struct EnvironmentData getEnvironmentData() {
   data.ambientIsLight = data.ambientLightLevel < AMBIENT_LIGHT_LEVEL_DARK;
   data.vccVoltageReading = analogRead(PIN_BATTERY_SENSE);
   data.vccVoltage =
-      (data.vccVoltageReading * AREF * (VCC_DIVIDER_SRC + VCC_DIVIDER_GND))
-      / (1023 * VCC_DIVIDER_GND);
+      // Convert reading to sensed voltage.
+      (data.vccVoltageReading / 1023.0) * AREF
+      // Scale sensed voltage to actual Vcc based on dividers.
+      * (VCC_DIVIDER_SRC + VCC_DIVIDER_GND) / VCC_DIVIDER_GND;
   return data;
 }
 
@@ -159,17 +161,21 @@ void debugMode() {
   }
 
   // VCC (battery voltage)
-  display.clear();
-  display.writeDigitRaw(0, charTo7Seg('V'));
-  display.writeDigitRaw(1, charTo7Seg('C'));
-  display.writeDigitRaw(3, charTo7Seg('C'));
-  display.writeDisplay();
-  delay(1000);
   while (!consumeWakePress()) {
+    display.clear();
+    display.writeDigitRaw(0, charTo7Seg('V'));
+    display.writeDigitRaw(1, charTo7Seg('C'));
+    display.writeDigitRaw(3, charTo7Seg('C'));
+    display.writeDisplay();
+    delay(500);
     display.clear();
     display.println(data.vccVoltage);
     display.writeDisplay();
-    delay(100);
+    delay(1000);
+    display.clear();
+    display.println(data.vccVoltageReading);
+    display.writeDisplay();
+    delay(1000);
     data = getEnvironmentData();
   }
 
