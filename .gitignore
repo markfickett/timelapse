@@ -1,2 +1,5 @@
 *.swp
 TODO.txt
+eagle/*.s#*
+eagle/*.b#*
+.DS_Store
