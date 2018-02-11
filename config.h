@@ -1,4 +1,6 @@
-// Pin-number and behavior configuration.
+/**
+ * Pin-number and behavior configuration.
+ */
 
 // This value is passed to Narcoleptic as an int, so must be < INT_MAX (32767).
 #define SLEEP_INTERVAL_MILLIS (10 * 1000)

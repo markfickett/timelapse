@@ -11,8 +11,8 @@
 // https://github.com/rocketscream/Low-Power
 #include "LowPower.h"
 
-// pin numbers and timings
 #include "config.h"
+#include "buttons.h"
 
 // Chronodot https://www.adafruit.com/products/255 and guide
 // learn.adafruit.com/ds1307-real-time-clock-breakout-board-kit/wiring-it-up
@@ -21,29 +21,6 @@ RTC_DS1307 rtc;
 
 // learn.adafruit.com/adafruit-led-backpack/0-dot-56-seven-segment-backpack
 Adafruit_7segment display = Adafruit_7segment();
-
-volatile unsigned long buttonPressTimesMillis[2] = {0L, 0L};
-volatile boolean buttonPress[2] = {false, false};
-
-void handleWakePress() { handleButtonPress(0); }
-bool consumeWakePress() { return consumeButtonPress(0); }
-void handleChangePress() { handleButtonPress(1); }
-bool consumeChangePress() { return consumeButtonPress(1); }
-bool consumeButtonPress(int i) {
-  if (buttonPress[i]) {
-    buttonPress[i] = false;
-    return true;
-  }
-  return false;
-}
-void handleButtonPress(int i) {
-  unsigned long t = millis();
-  if (!buttonPress[i] &&
-      t - buttonPressTimesMillis[i] > BUTTON_DEBOUNCE_MILLIS) {
-    buttonPress[i] = true;
-    buttonPressTimesMillis[i] = t;
-  }
-}
 
 byte charTo7Seg(char c) {
   switch(c) {
