@@ -13,6 +13,7 @@
 
 #include "config.h"
 #include "buttons.h"
+#include "schedule.h"
 
 // Chronodot https://www.adafruit.com/products/255 and guide
 // learn.adafruit.com/ds1307-real-time-clock-breakout-board-kit/wiring-it-up
@@ -22,8 +23,19 @@ RTC_DS1307 rtc;
 // learn.adafruit.com/adafruit-led-backpack/0-dot-56-seven-segment-backpack
 Adafruit_7segment display = Adafruit_7segment();
 
+struct EnvironmentData {
+  DateTime now;
+
+  int ambientLightLevel; // raw analogRead value
+  bool ambientIsLight;
+
+  int vccVoltageReading; // raw analogRead value
+  float vccVoltage;
+};
+
 byte charTo7Seg(char c) {
   switch(c) {
+    case 'A': return 0b01110111;
     case 'C': return 0b00111001;
     case 'E': return 0b01111001;
     case 'X':
@@ -37,9 +49,11 @@ byte charTo7Seg(char c) {
     case 'V': return 0b00111100;
     case 'a': return 0b11011100;
     case 'b': return 0b01111100;
+    case 'd': return 0b01011110;
     case 'g': return 0b01101111;
     case 'h': return 0b01110100;
     case 'n': return 0b01010100;
+    case 't': return 0b01110000;
     case 'y': return 0b01101110;
     case '.': return 0b10000000;
     case '!': return 0b10000010;
@@ -47,6 +61,9 @@ byte charTo7Seg(char c) {
       return 0b11111111;
   }
 }
+
+Schedule schedule;
+DateTime lastPhoto(2018, 2, 10);
 
 void setup() {
   Serial.begin(57600);
@@ -83,6 +100,8 @@ void setup() {
   display.writeDisplay();
   delay(1000);
 
+  schedule.setPeriodAndNextAfter(lastPhoto, TEN_MINUTES);
+
   attachInterrupt(
       digitalPinToInterrupt(PIN_WAKE_BUTTON), handleWakePress, FALLING);
   attachInterrupt(
@@ -94,16 +113,6 @@ void setTime() {
   now = now + TimeSpan(0, 5, 0, 0); // EDT => UTC
   rtc.adjust(now);
 }
-
-struct EnvironmentData {
-  DateTime now;
-
-  int ambientLightLevel; // raw analogRead value
-  bool ambientIsLight;
-
-  int vccVoltageReading; // raw analogRead value
-  float vccVoltage;
-};
 
 struct EnvironmentData getEnvironmentData() {
   struct EnvironmentData data;
@@ -119,20 +128,94 @@ struct EnvironmentData getEnvironmentData() {
   return data;
 }
 
+void displayTime(int hours, int minutes, bool drawColon) {
+  display.clear();
+  display.writeDigitNum(0, hours / 10);
+  display.writeDigitNum(1, hours % 10);
+  display.drawColon(drawColon);
+  display.writeDigitNum(3, minutes / 10);
+  display.writeDigitNum(4, minutes % 10);
+  display.writeDisplay();
+}
+
 void debugMode() {
   struct EnvironmentData data = getEnvironmentData();
   consumeChangePress();
 
+  // Schedule / next photo
+  while (!consumeWakePress()) {
+    data = getEnvironmentData();
+    TimeSpan remaining = schedule.next - data.now;
+
+    // current interval
+    display.clear();
+    switch(schedule.period) {
+      case ONE_MINUTE: // :01
+        display.drawColon(true);
+        display.writeDigitNum(3, 0);
+        display.writeDigitNum(4, 1);
+        break;
+      case TEN_MINUTES: // :10
+        display.writeDigitNum(3, 1);
+        display.writeDigitNum(4, 0);
+        display.drawColon(true);
+        break;
+      case ONE_HOUR: // 1h
+        display.writeDigitNum(0, 1);
+        display.writeDigitRaw(1, charTo7Seg('h'));
+        break;
+      case ONE_DAY: // 1d
+        display.writeDigitNum(0, 1);
+        display.writeDigitRaw(1, charTo7Seg('d'));
+        break;
+    }
+    display.writeDisplay();
+    delay(500);
+
+    // Is it still SCHEduled for the future, or are we PAST the schedule time?
+    display.clear();
+    if (remaining.totalseconds() >= 0) {
+      display.writeDigitRaw(0, charTo7Seg('S'));
+      display.writeDigitRaw(1, charTo7Seg('C'));
+      display.writeDigitRaw(3, charTo7Seg('H'));
+      display.writeDigitRaw(4, charTo7Seg('E'));
+    } else {
+      display.writeDigitRaw(0, charTo7Seg('P'));
+      display.writeDigitRaw(1, charTo7Seg('A'));
+      display.writeDigitRaw(3, charTo7Seg('S'));
+      display.writeDigitRaw(4, charTo7Seg('t'));
+    }
+    display.writeDisplay();
+    delay(500);
+
+    // time remaining/elapsed (absolute value)
+    if (remaining.totalseconds() < 0) {
+      remaining = TimeSpan(-remaining.totalseconds());
+    }
+    display.clear();
+    if (remaining.totalseconds() <= 60) {
+      display.println(remaining.totalseconds());
+    } else if (remaining.days() <= 2) {
+      displayTime(
+          remaining.hours() + remaining.days() * 24,
+          remaining.minutes(),
+          true /* drawColon */);
+    } else {
+      display.println(remaining.days() * 10);
+      display.writeDigitRaw(4, charTo7Seg('d'));
+    }
+    display.writeDisplay();
+    delay(1000);
+
+    if (consumeChangePress()) {
+      schedule.cyclePeriodAndRescheduleAfter(lastPhoto);
+    }
+  }
+
   // time, UTC
   bool colonBlink = false;
   while (!consumeWakePress()) {
-    display.clear();
-    display.writeDigitNum(0, data.now.hour() / 10);
-    display.writeDigitNum(1, data.now.hour() % 10);
-    display.drawColon(colonBlink = !colonBlink);
-    display.writeDigitNum(3, data.now.minute() / 10);
-    display.writeDigitNum(4, data.now.minute() % 10);
-    display.writeDisplay();
+    displayTime(data.now.hour(), data.now.minute(), colonBlink = !colonBlink);
     delay(1000);
     data = getEnvironmentData();
   }
@@ -165,6 +248,7 @@ void debugMode() {
     display.writeDisplay();
     if (consumeChangePress()) {
       takePicture();
+      updateAfterPicture(data.now);
     }
     delay(50);
   }
@@ -196,8 +280,6 @@ void debugMode() {
     data = getEnvironmentData();
   }
 
-  // TODO next photo time & interval
-
   display.clear();
   display.writeDigitRaw(0, charTo7Seg('b'));
   display.writeDigitRaw(1, charTo7Seg('y'));
@@ -212,18 +294,6 @@ void debugMode() {
   display.clear();
   display.writeDisplay();
   display.setBrightness(15);
-}
-
-void checkConditionsMaybeTakePicture() {
-  struct EnvironmentData data = getEnvironmentData();
-  if (data.vccVoltage < VCC_VOLTAGE_LOW || !data.ambientIsLight) {
-    return;
-  }
-  /* TODO
-  if (it's time) {
-    takePicture();
-  }
-  */
 }
 
 void takePicture() {
@@ -262,11 +332,23 @@ void takePicture() {
   display.writeDisplay();
 }
 
+void updateAfterPicture(DateTime now) {
+  schedule.advancePast(now);
+  lastPhoto = now;
+}
+
 void loop() {
   if (consumeWakePress()) {
     debugMode();
   }
-  checkConditionsMaybeTakePicture();
+
+  struct EnvironmentData data = getEnvironmentData();
+  if (data.vccVoltage >= VCC_VOLTAGE_LOW
+      && data.ambientIsLight
+      && schedule.isTimeFor(data.now)) {
+    takePicture();
+    updateAfterPicture(data.now);
+  }
 
   lowPowerSleep();
 }

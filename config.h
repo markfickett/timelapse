@@ -51,3 +51,6 @@
 #define PIN_7SEG_POWER 4
 
 #define BUTTON_DEBOUNCE_MILLIS 500
+
+// 16:00 eastern during the winter => 21:00 UTC
+#define DAILY_HOUR_OF_DAY_UTC 21
