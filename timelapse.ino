@@ -31,6 +31,10 @@ struct EnvironmentData {
 
   int vccVoltageReading; // raw analogRead value
   float vccVoltage;
+
+  // from camera activity LED
+  int cameraIdleReading; // raw analogRead value
+  bool cameraIsIdle;
 };
 
 byte charTo7Seg(char c) {
@@ -74,7 +78,7 @@ void setup() {
   rtc.begin();
   //setTime();
 
-  pinMode(PIN_CAMERA_ACTIVITY_SENSE, INPUT);
+  pinMode(PIN_CAMERA_IDLE_SENSE, INPUT);
   pinMode(PIN_AMBIENT_LIGHT_SENSE, INPUT);
   pinMode(PIN_BATTERY_SENSE, INPUT);
 
@@ -125,6 +129,8 @@ struct EnvironmentData getEnvironmentData() {
       (data.vccVoltageReading / 1023.0) * AREF
       // Scale sensed voltage to actual Vcc based on dividers.
       * (VCC_DIVIDER_SRC + VCC_DIVIDER_GND) / VCC_DIVIDER_GND;
+  data.cameraIdleReading = analogRead(PIN_CAMERA_IDLE_SENSE);
+  data.cameraIsIdle = data.cameraIdleReading >= CAMERA_IDLE_THRESHOLD;
   return data;
 }
 
@@ -262,21 +268,20 @@ void debugMode() {
     display.writeDigitRaw(4, charTo7Seg('h'));
     display.writeDisplay();
     delay(500);
+    displayThreshold(data.ambientIsLight, data.ambientLightLevel);
+    data = getEnvironmentData();
+  }
+
+  // camera activity LED
+  while (!consumeWakePress()) {
     display.clear();
-    if (data.ambientIsLight) {
-      display.writeDigitRaw(0, charTo7Seg('y'));
-      display.writeDigitRaw(1, charTo7Seg('E'));
-      display.writeDigitRaw(3, charTo7Seg('S'));
-    } else {
-      display.writeDigitRaw(1, charTo7Seg('n'));
-      display.writeDigitRaw(3, charTo7Seg('O'));
-    }
+    display.writeDigitRaw(0, charTo7Seg('I'));
+    display.writeDigitRaw(1, charTo7Seg('d'));
+    display.writeDigitRaw(3, charTo7Seg('L'));
+    display.writeDigitRaw(4, charTo7Seg('E'));
     display.writeDisplay();
     delay(500);
-    display.clear();
-    display.println(data.ambientLightLevel);
-    display.writeDisplay();
-    delay(1000);
+    displayThreshold(data.cameraIsIdle, data.cameraIdleReading);
     data = getEnvironmentData();
   }
 
@@ -296,6 +301,24 @@ void debugMode() {
   display.setBrightness(15);
 }
 
+void displayThreshold(bool meetsThreshold, int analogValue) {
+  display.clear();
+  if (meetsThreshold) {
+    display.writeDigitRaw(0, charTo7Seg('y'));
+    display.writeDigitRaw(1, charTo7Seg('E'));
+    display.writeDigitRaw(3, charTo7Seg('S'));
+  } else {
+    display.writeDigitRaw(1, charTo7Seg('n'));
+    display.writeDigitRaw(3, charTo7Seg('O'));
+  }
+  display.writeDisplay();
+  delay(500);
+  display.clear();
+  display.println(analogValue);
+  display.writeDisplay();
+  delay(1000);
+}
+
 void takePicture() {
   display.clear();
   display.writeDigitRaw(0, charTo7Seg('E'));
@@ -303,33 +326,40 @@ void takePicture() {
   display.writeDigitRaw(3, charTo7Seg('P'));
   display.writeDisplay();
 
-  delay(1000);
-  /*
   digitalWrite(PIN_CAMERA_POWER_SUPPLY, HIGH);
-  delay(1000);
-  digitalWrite(PIN_CAMERA_POWER_SUPPLY, LOW);
-  delay(2000);
-  */
+  waitForCameraActivity();
 
-  /*
   digitalWrite(PIN_CAMERA_FOCUS, HIGH);
-  delay(1000);
-  digitalWrite(PIN_CAMERA_FOCUS, LOW);
-  */
-
-  /*
-  display.clear();
-  display.print(analogRead(PIN_CAMERA_ACTIVITY_SENSE));
-  display.writeDisplay();
-  delay(1000);
-  */
-
-  /*
   digitalWrite(PIN_CAMERA_EXPOSE, HIGH);
+  delay(CAMERA_EXPOSE_TIME_MS);
+  digitalWrite(PIN_CAMERA_FOCUS, LOW);
   digitalWrite(PIN_CAMERA_EXPOSE, LOW);
-  */
+
+  waitForCameraActivity();
+
+  digitalWrite(PIN_CAMERA_POWER_SUPPLY, LOW);
   display.clear();
   display.writeDisplay();
+}
+
+void waitForCameraActivity() {
+  struct EnvironmentData data = getEnvironmentData();
+  int checkCount = 0;
+  // Wait for the activity light to come on...
+  while (data.cameraIsIdle && checkCount++ < CAMERA_FAILSAFE_WAIT_COUNT_LIMIT) {
+    delay(CAMERA_ACCESS_WAIT_INTERVAL_MS);
+    data = getEnvironmentData();
+  }
+  checkCount = 0;
+  int idleCycles = 0;
+  // ...and then to stay off.
+  while (idleCycles < 4 && checkCount++ < CAMERA_FAILSAFE_WAIT_COUNT_LIMIT) {
+    if (data.cameraIsIdle) {
+      idleCycles++;
+    }
+    delay(CAMERA_ACCESS_WAIT_INTERVAL_MS);
+    data = getEnvironmentData();
+  }
 }
 
 void updateAfterPicture(DateTime now) {

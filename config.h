@@ -11,9 +11,21 @@
 // To camera via opto-isolator.
 #define PIN_CAMERA_FOCUS 6
 #define PIN_CAMERA_EXPOSE 7
+
 // Sense the memory-access LED on the camera to detect when an exposure is done
 // and written to storage.
-#define PIN_CAMERA_ACTIVITY_SENSE A1
+#define PIN_CAMERA_IDLE_SENSE A1
+// Threshold for the analog reading for the camera memory-access LED. LED off
+// (done/idle) is around 900+, on (active) is lower.
+#define CAMERA_IDLE_THRESHOLD 900
+// How long to wait between each time checking if the camera is done taking
+// the exposure.
+#define CAMERA_ACCESS_WAIT_INTERVAL_MS 50
+// Number of times to repeat waiting for the camera to be done taking the
+// exposure (1 minute). Also used waiting for startup.
+#define CAMERA_FAILSAFE_WAIT_COUNT_LIMIT 1200
+// Duration to 'press' the shutter switch.
+#define CAMERA_EXPOSE_TIME_MS 100
 
 // 500 = normal room, 900 = dim, 950+ = dark
 #define PIN_AMBIENT_LIGHT_SENSE A2
@@ -34,16 +46,6 @@
 #define VCC_DIVIDER_GND 332.0
 // Max tolerable Vcc = 17.6v =
 //     AREF * (VCC_DIVIDER_SRC + VCC_DIVIDER_GND) / VCC_DIVIDER_GND
-
-// Threshold for the analog reading for the camera memory-access LED. LED on
-// (writing) is typically 0, and off (done) is typically 300.
-#define CAMERA_ACCESS_THRESHOLD 50
-// How long to wait between each time checking if the camera is done taking
-// the exposure.
-#define CAMERA_ACCESS_WAIT_INTERVAL_MS 50
-// Number of times to repeat waiting for the camera to be done taking the
-// exposure (1 minute).
-#define CAMERA_FAILSAFE_WAIT_COUNT_LIMIT 1200
 
 #define PIN_WAKE_BUTTON 2
 #define PIN_CHANGE_BUTTON 3
