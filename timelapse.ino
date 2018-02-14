@@ -42,6 +42,7 @@ byte charTo7Seg(char c) {
     case 'A': return 0b01110111;
     case 'C': return 0b00111001;
     case 'E': return 0b01111001;
+    case 'F': return 0b01110001;
     case 'X':
     case 'H': return 0b01110110;
     case 'I': return 0b00110000;
@@ -146,7 +147,7 @@ void displayTime(int hours, int minutes, bool drawColon) {
 
 void debugMode() {
   struct EnvironmentData data = getEnvironmentData();
-  consumeChangePress();
+  consumeChangePress();  // clear any old presses
 
   // Schedule / next photo
   while (!consumeWakePress()) {
@@ -258,6 +259,27 @@ void debugMode() {
     }
     delay(50);
   }
+
+  // camera power on/off
+  bool isOn = false;
+  while (!consumeWakePress()) {
+    display.clear();
+    if (isOn) {
+      display.writeDigitRaw(0, charTo7Seg('O'));
+      display.writeDigitRaw(1, charTo7Seg('n'));
+    } else {
+      display.writeDigitRaw(0, charTo7Seg('O'));
+      display.writeDigitRaw(1, charTo7Seg('F'));
+      display.writeDigitRaw(3, charTo7Seg('F'));
+    }
+    display.writeDisplay();
+    if (consumeChangePress()) {
+      isOn = !isOn;
+      digitalWrite(PIN_CAMERA_POWER_SUPPLY, isOn ? HIGH : LOW);
+    }
+    delay(50);
+  }
+  digitalWrite(PIN_CAMERA_POWER_SUPPLY, LOW);
 
   // ambient light level
   while (!consumeWakePress()) {
