@@ -333,6 +333,8 @@ void debugMode() {
   display.clear();
   display.writeDisplay();
   display.setBrightness(15);
+  consumeWakePress();  // clear any stray presses again
+  consumeChangePress();
 }
 
 void displayThreshold(bool meetsThreshold, int analogValue) {
