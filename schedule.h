@@ -2,7 +2,12 @@
  * Timing for when to take photos.
  */
 
+#include <EEPROM.h>
 #include "config.h"
+
+#define SCHEDULE_EEPROM_MAGIC_NUMBER 0b01011101
+#define SCHEDULE_EEPROM_ADDRESS_MN 0
+#define SCHEDULE_EEPROM_ADDRESS_PERIOD 1
 
 enum SchedulePeriod {
   ONE_MINUTE,
@@ -18,11 +23,11 @@ class Schedule {
     TimeSpan periodSpan;
 
     /**
-     * Set semi-bogus defaults; expect real initialization after RTC is
-     * initialized. TODO Save/restore with EEPROM?
+     * Read saved SchedulePeriod from EEPROM.
      */
-    Schedule() {
-      setPeriodAndNextAfter(DateTime(), ONE_DAY);
+    Schedule(DateTime initialTimestamp) {
+      Schedule::setUpEeprom();
+      setPeriodAndNextAfter(initialTimestamp, Schedule::readFromEeprom());
     }
 
     bool isTimeFor(DateTime now) {
@@ -35,6 +40,7 @@ class Schedule {
 
     void setPeriodAndNextAfter(DateTime now, SchedulePeriod newPeriod) {
       period = newPeriod;
+      Schedule::writeToEeprom(period);
       switch(period) {
         case ONE_MINUTE:
           periodSpan = TimeSpan(0, 0, 1, 0);
@@ -81,5 +87,23 @@ class Schedule {
         periodAligned = periodAligned + periodSpan;
       }
       next = periodAligned;
+    }
+
+  private:
+    static void setUpEeprom() {
+      if (EEPROM.read(SCHEDULE_EEPROM_ADDRESS_MN)
+          == SCHEDULE_EEPROM_MAGIC_NUMBER) {
+        return;
+      }
+      EEPROM.write(SCHEDULE_EEPROM_ADDRESS_PERIOD, TEN_MINUTES);
+      EEPROM.write(SCHEDULE_EEPROM_ADDRESS_MN, SCHEDULE_EEPROM_MAGIC_NUMBER);
+    }
+
+    static SchedulePeriod readFromEeprom() {
+      return EEPROM.read(SCHEDULE_EEPROM_ADDRESS_PERIOD);
+    }
+
+    static void writeToEeprom(SchedulePeriod periodToSave) {
+      EEPROM.write(SCHEDULE_EEPROM_ADDRESS_PERIOD, periodToSave);
     }
 };

@@ -67,8 +67,8 @@ byte charTo7Seg(char c) {
   }
 }
 
-Schedule schedule;
 DateTime lastPhoto(2018, 2, 14);  // some time in the past
+Schedule schedule(lastPhoto);
 
 void setup() {
   Serial.begin(57600);
@@ -122,8 +122,6 @@ void setup() {
     now = now + TimeSpan(0, 5, 0, 0); // EDT => UTC
     rtc.adjust(now);
   }
-
-  schedule.setPeriodAndNextAfter(lastPhoto, TEN_MINUTES);
 
   attachInterrupt(
       digitalPinToInterrupt(PIN_WAKE_BUTTON), handleWakePress, FALLING);

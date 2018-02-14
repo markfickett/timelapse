@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Pin-number and behavior configuration.
  */
