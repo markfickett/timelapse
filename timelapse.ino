@@ -71,7 +71,6 @@ DateTime lastPhoto(2018, 2, 14);  // some time in the past
 Schedule schedule(lastPhoto);
 
 void setup() {
-  Serial.begin(57600);
   // This must be called before analogRead if voltage is applied to the AREF
   // pin, or else the board may be damaged.
   analogReference(EXTERNAL);
@@ -93,6 +92,7 @@ void setup() {
 
   pinMode(PIN_7SEG_POWER, OUTPUT);
   digitalWrite(PIN_7SEG_POWER, HIGH);
+  delay(50);  // Give it time to wake up.
   display.begin(0x70 /* default I2C address */); // also sets max brightness
   display.clear();
   display.writeDigitRaw(0, charTo7Seg('h'));
