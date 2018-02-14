@@ -68,16 +68,13 @@ byte charTo7Seg(char c) {
 }
 
 Schedule schedule;
-DateTime lastPhoto(2018, 2, 10);
+DateTime lastPhoto(2018, 2, 14);  // some time in the past
 
 void setup() {
   Serial.begin(57600);
   // This must be called before analogRead if voltage is applied to the AREF
   // pin, or else the board may be damaged.
   analogReference(EXTERNAL);
-
-  rtc.begin();
-  //setTime();
 
   pinMode(PIN_CAMERA_IDLE_SENSE, INPUT);
   pinMode(PIN_AMBIENT_LIGHT_SENSE, INPUT);
@@ -105,18 +102,33 @@ void setup() {
   display.writeDisplay();
   delay(1000);
 
+  // Real-time clock setup.
+  rtc.begin();
+  int clockProgress = 0;
+  while (!rtc.isrunning()) {
+    // It may be necessary to wait, after begin(), before adjust() can be
+    // called. Docs on isrunning() are unclear whether it's really the right
+    // check.
+    display.clear();
+    clockProgress = clockProgress + 1 % 5;
+    display.writeDigitRaw(clockProgress, charTo7Seg('.'));
+    display.writeDisplay();
+    delay(100);
+  }
+  // If the clock's date is set way in the past, it is probably fresh or reset
+  // and should be set to the host machine's clock at compile time.
+  if (rtc.now().year() < 2018) {
+    DateTime now = DateTime(__DATE__, __TIME__); // time at compilation
+    now = now + TimeSpan(0, 5, 0, 0); // EDT => UTC
+    rtc.adjust(now);
+  }
+
   schedule.setPeriodAndNextAfter(lastPhoto, TEN_MINUTES);
 
   attachInterrupt(
       digitalPinToInterrupt(PIN_WAKE_BUTTON), handleWakePress, FALLING);
   attachInterrupt(
       digitalPinToInterrupt(PIN_CHANGE_BUTTON), handleChangePress, FALLING);
-}
-
-void setTime() {
-  DateTime now = DateTime(__DATE__, __TIME__); // time at compilation
-  now = now + TimeSpan(0, 5, 0, 0); // EDT => UTC
-  rtc.adjust(now);
 }
 
 struct EnvironmentData getEnvironmentData() {
