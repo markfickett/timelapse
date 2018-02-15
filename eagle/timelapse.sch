@@ -4927,6 +4927,220 @@ Siemens, Hewlett-Packard, Texas Instuments, Sharp, Motorola&lt;p&gt;
 </deviceset>
 </devicesets>
 </library>
+<library name="SparkFun-Capacitors">
+<description>&lt;h3&gt;SparkFun Capacitors&lt;/h3&gt;
+This library contains capacitors. 
+&lt;br&gt;
+&lt;br&gt;
+We've spent an enormous amount of time creating and checking these footprints and parts, but it is &lt;b&gt; the end user's responsibility&lt;/b&gt; to ensure correctness and suitablity for a given componet or application. 
+&lt;br&gt;
+&lt;br&gt;If you enjoy using this library, please buy one of our products at &lt;a href=" www.sparkfun.com"&gt;SparkFun.com&lt;/a&gt;.
+&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;Licensing:&lt;/b&gt; Creative Commons ShareAlike 4.0 International - https://creativecommons.org/licenses/by-sa/4.0/ 
+&lt;br&gt;
+&lt;br&gt;
+You are welcome to use this library for commercial purposes. For attribution, we ask that when you begin to sell your device using our footprint, you email us with a link to the product being sold. We want bragging rights that we helped (in a very small part) to create your 8th world wonder. We would like the opportunity to feature your device on our homepage.</description>
+<packages>
+<package name="EIA3216">
+<description>Generic EIA 3216 (1206) polarized tantalum capacitor</description>
+<wire x1="-1" y1="-1.2" x2="-2.5" y2="-1.2" width="0.2032" layer="51"/>
+<wire x1="-2.5" y1="-1.2" x2="-2.5" y2="1.2" width="0.2032" layer="51"/>
+<wire x1="-2.5" y1="1.2" x2="-1" y2="1.2" width="0.2032" layer="51"/>
+<wire x1="1" y1="-1.2" x2="2.1" y2="-1.2" width="0.2032" layer="51"/>
+<wire x1="2.1" y1="-1.2" x2="2.5" y2="-0.8" width="0.2032" layer="51"/>
+<wire x1="2.5" y1="-0.8" x2="2.5" y2="0.8" width="0.2032" layer="51"/>
+<wire x1="2.5" y1="0.8" x2="2.1" y2="1.2" width="0.2032" layer="51"/>
+<wire x1="2.1" y1="1.2" x2="1" y2="1.2" width="0.2032" layer="51"/>
+<wire x1="2.413" y1="0.762" x2="2.413" y2="-0.762" width="0.2032" layer="21"/>
+<smd name="-" x="-1.4" y="0" dx="1.6" dy="1.4" layer="1" rot="R90"/>
+<smd name="+" x="1.4" y="0" dx="1.6" dy="1.4" layer="1" rot="R90"/>
+<text x="0" y="1.143" size="0.6096" layer="25" font="vector" ratio="20" align="bottom-center">&gt;NAME</text>
+<text x="0" y="-1.143" size="0.6096" layer="27" font="vector" ratio="20" align="top-center">&gt;VALUE</text>
+</package>
+<package name="0603-POLAR">
+<description>&lt;p&gt;&lt;b&gt;Polarized 1608 (0603) package&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;0.2mm courtyard excess rounded to nearest 0.05mm.&lt;/p&gt;</description>
+<wire x1="-1.1" y1="-0.8" x2="-1.7" y2="-0.8" width="0.2032" layer="51"/>
+<wire x1="-1.7" y1="-0.8" x2="-1.7" y2="0.8" width="0.2032" layer="51"/>
+<wire x1="-1.7" y1="0.8" x2="-1.1" y2="0.8" width="0.2032" layer="51"/>
+<wire x1="1.1" y1="-0.8" x2="1.5" y2="-0.8" width="0.2032" layer="51"/>
+<wire x1="1.5" y1="-0.8" x2="1.9" y2="-0.4" width="0.2032" layer="51"/>
+<wire x1="1.9" y1="-0.4" x2="1.9" y2="0.4" width="0.2032" layer="51"/>
+<wire x1="1.9" y1="0.4" x2="1.5" y2="0.8" width="0.2032" layer="51"/>
+<wire x1="1.5" y1="0.8" x2="1.1" y2="0.8" width="0.2032" layer="51"/>
+<wire x1="-1.6" y1="0.7" x2="1.6" y2="0.7" width="0.0508" layer="39"/>
+<wire x1="1.6" y1="0.7" x2="1.6" y2="-0.7" width="0.0508" layer="39"/>
+<wire x1="1.6" y1="-0.7" x2="-1.6" y2="-0.7" width="0.0508" layer="39"/>
+<wire x1="-1.6" y1="-0.7" x2="-1.6" y2="0.7" width="0.0508" layer="39"/>
+<wire x1="-0.356" y1="0.432" x2="0.356" y2="0.432" width="0.1016" layer="51"/>
+<wire x1="-0.356" y1="-0.419" x2="0.356" y2="-0.419" width="0.1016" layer="51"/>
+<smd name="-" x="-0.85" y="0" dx="1.1" dy="1" layer="1"/>
+<smd name="+" x="0.85" y="0" dx="1.1" dy="1" layer="1"/>
+<text x="0" y="0.762" size="0.6096" layer="25" font="vector" ratio="20" align="bottom-center">&gt;NAME</text>
+<text x="0" y="-0.762" size="0.6096" layer="27" font="vector" ratio="20" align="top-center">&gt;VALUE</text>
+<rectangle x1="-0.8382" y1="-0.4699" x2="-0.3381" y2="0.4801" layer="51"/>
+<rectangle x1="0.3302" y1="-0.4699" x2="0.8303" y2="0.4801" layer="51"/>
+<wire x1="1.651" y1="0.508" x2="1.651" y2="-0.508" width="0.127" layer="21"/>
+</package>
+<package name="EIA3528">
+<description>Generic EIA 3528 polarized tantalum capacitor</description>
+<wire x1="-0.9" y1="-1.6" x2="-2.6" y2="-1.6" width="0.2032" layer="51"/>
+<wire x1="-2.6" y1="-1.6" x2="-2.6" y2="1.55" width="0.2032" layer="51"/>
+<wire x1="-2.6" y1="1.55" x2="-0.9" y2="1.55" width="0.2032" layer="51"/>
+<wire x1="1" y1="-1.55" x2="2.2" y2="-1.55" width="0.2032" layer="51"/>
+<wire x1="2.2" y1="-1.55" x2="2.6" y2="-1.2" width="0.2032" layer="51"/>
+<wire x1="2.6" y1="-1.2" x2="2.6" y2="1.25" width="0.2032" layer="51"/>
+<wire x1="2.6" y1="1.25" x2="2.2" y2="1.55" width="0.2032" layer="51"/>
+<wire x1="2.2" y1="1.55" x2="1" y2="1.55" width="0.2032" layer="51"/>
+<wire x1="2.641" y1="1.311" x2="2.641" y2="-1.286" width="0.2032" layer="21" style="longdash"/>
+<smd name="C" x="-1.65" y="0" dx="2.5" dy="1.2" layer="1" rot="R90"/>
+<smd name="A" x="1.65" y="0" dx="2.5" dy="1.2" layer="1" rot="R90"/>
+<text x="0" y="1.778" size="0.6096" layer="25" font="vector" ratio="20" align="bottom-center">&gt;NAME</text>
+<text x="0" y="-1.778" size="0.6096" layer="27" font="vector" ratio="20" align="top-center">&gt;VALUE</text>
+</package>
+<package name="CPOL-RADIAL-2.5MM-5MM">
+<description>2.5 mm spaced PTHs with 5 mm diameter outline and standard solder mask</description>
+<pad name="1" x="1.25" y="0" drill="0.7" diameter="1.651" shape="square"/>
+<pad name="2" x="-1.25" y="0" drill="0.7" diameter="1.651"/>
+<circle x="0" y="0" radius="2.5" width="0.2032" layer="21"/>
+<text x="0" y="2.667" size="0.6096" layer="25" font="vector" ratio="20" align="bottom-center">&gt;Name</text>
+<text x="0" y="-2.667" size="0.6096" layer="27" font="vector" ratio="20" align="top-center">&gt;Value</text>
+<wire x1="-0.742" y1="1.397" x2="-1.758" y2="1.397" width="0.2032" layer="21"/>
+<wire x1="1.758" y1="1.397" x2="0.742" y2="1.397" width="0.2032" layer="21"/>
+<wire x1="1.25" y1="1.905" x2="1.25" y2="0.889" width="0.2032" layer="21"/>
+</package>
+<package name="CPOL-RADIAL-2.5MM-5MM-KIT">
+<description>2.5 mm spaced PTHs with top copper masked</description>
+<circle x="0" y="0" radius="2.5" width="0.2032" layer="21"/>
+<pad name="1" x="1.25" y="0" drill="0.7" diameter="1.651" shape="square" stop="no"/>
+<pad name="2" x="-1.25" y="0" drill="0.7" diameter="1.651" stop="no"/>
+<text x="0" y="2.667" size="0.6096" layer="25" font="vector" ratio="20" align="bottom-center">&gt;Name</text>
+<text x="0" y="-2.667" size="0.6096" layer="27" font="vector" ratio="20" align="top-center">&gt;Value</text>
+<circle x="-1.25" y="0" radius="0.3556" width="0" layer="29"/>
+<circle x="-1.25" y="0" radius="0.9652" width="0" layer="30"/>
+<circle x="1.25" y="0" radius="0.3556" width="0" layer="29"/>
+<rectangle x1="0.2848" y1="-0.9652" x2="2.2152" y2="0.9652" layer="30"/>
+<wire x1="-0.742" y1="1.397" x2="-1.758" y2="1.397" width="0.2032" layer="21"/>
+<wire x1="1.758" y1="1.397" x2="0.742" y2="1.397" width="0.2032" layer="21"/>
+<wire x1="1.25" y1="1.905" x2="1.25" y2="0.889" width="0.2032" layer="21"/>
+</package>
+<package name="EIA6032-NOM">
+<description>Metric Size Code EIA 6032-25 Median (Nominal) Land Protrusion&lt;br /&gt;
+http://www.kemet.com/Lists/ProductCatalog/Attachments/254/KEM_T2005_T491.pdf</description>
+<wire x1="-3.91" y1="1.5" x2="-2" y2="1.5" width="0.127" layer="51"/>
+<wire x1="-3.91" y1="1.5" x2="-3.91" y2="-1.5" width="0.127" layer="51"/>
+<wire x1="-3.91" y1="-1.5" x2="-2" y2="-1.5" width="0.127" layer="51"/>
+<wire x1="2" y1="1.5" x2="3.5" y2="1.5" width="0.127" layer="51"/>
+<wire x1="3.5" y1="1.5" x2="3.91" y2="1" width="0.127" layer="51"/>
+<wire x1="3.91" y1="1" x2="3.91" y2="-1" width="0.127" layer="51"/>
+<wire x1="3.91" y1="-1" x2="3.5" y2="-1.5" width="0.127" layer="51"/>
+<wire x1="3.5" y1="-1.5" x2="2" y2="-1.5" width="0.127" layer="51"/>
+<smd name="C" x="-2.47" y="0" dx="2.37" dy="2.23" layer="1" rot="R180"/>
+<smd name="A" x="2.47" y="0" dx="2.37" dy="2.23" layer="1" rot="R180"/>
+<text x="0" y="1.27" size="0.6096" layer="25" font="vector" ratio="20" align="bottom-center">&gt;Name</text>
+<text x="0" y="-1.27" size="0.6096" layer="27" font="vector" ratio="20" align="top-center">&gt;Value</text>
+<wire x1="3.91" y1="1" x2="3.91" y2="-1" width="0.127" layer="21"/>
+</package>
+</packages>
+<symbols>
+<symbol name="CAP_POL">
+<wire x1="-2.54" y1="0" x2="2.54" y2="0" width="0.254" layer="94"/>
+<wire x1="0" y1="-1.016" x2="0" y2="-2.54" width="0.1524" layer="94"/>
+<wire x1="0" y1="-1" x2="2.4892" y2="-1.8542" width="0.254" layer="94" curve="-37.878202" cap="flat"/>
+<wire x1="-2.4669" y1="-1.8504" x2="0" y2="-1.0161" width="0.254" layer="94" curve="-37.376341" cap="flat"/>
+<text x="1.016" y="0.635" size="1.778" layer="95" font="vector">&gt;NAME</text>
+<text x="1.016" y="-4.191" size="1.778" layer="96" font="vector">&gt;VALUE</text>
+<rectangle x1="-2.253" y1="0.668" x2="-1.364" y2="0.795" layer="94"/>
+<rectangle x1="-1.872" y1="0.287" x2="-1.745" y2="1.176" layer="94"/>
+<pin name="+" x="0" y="2.54" visible="off" length="short" direction="pas" swaplevel="1" rot="R270"/>
+<pin name="-" x="0" y="-5.08" visible="off" length="short" direction="pas" swaplevel="1" rot="R90"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="10UF-POLAR" prefix="C">
+<description>&lt;h3&gt;10.0µF polarized capacitors&lt;/h3&gt;
+&lt;p&gt;A capacitor is a passive two-terminal electrical component used to store electrical energy temporarily in an electric field.&lt;/p&gt;</description>
+<gates>
+<gate name="G$1" symbol="CAP_POL" x="0" y="0"/>
+</gates>
+<devices>
+<device name="-EIA3216-16V-10%(TANT)" package="EIA3216">
+<connects>
+<connect gate="G$1" pin="+" pad="+"/>
+<connect gate="G$1" pin="-" pad="-"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="PROD_ID" value="CAP-00811"/>
+<attribute name="VALUE" value="10uF"/>
+</technology>
+</technologies>
+</device>
+<device name="-0603-6.3V-20%(TANT)" package="0603-POLAR">
+<connects>
+<connect gate="G$1" pin="+" pad="+"/>
+<connect gate="G$1" pin="-" pad="-"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="PROD_ID" value="CAP-13210"/>
+<attribute name="VALUE" value="10uF"/>
+</technology>
+</technologies>
+</device>
+<device name="-EIA3528-20V-10%(TANT)" package="EIA3528">
+<connects>
+<connect gate="G$1" pin="+" pad="A"/>
+<connect gate="G$1" pin="-" pad="C"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="PROD_ID" value="CAP-08063"/>
+<attribute name="VALUE" value="10uF"/>
+</technology>
+</technologies>
+</device>
+<device name="-RADIAL-2.5MM-25V-20%" package="CPOL-RADIAL-2.5MM-5MM">
+<connects>
+<connect gate="G$1" pin="+" pad="1"/>
+<connect gate="G$1" pin="-" pad="2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="PROD_ID" value="CAP-08440"/>
+<attribute name="VALUE" value="10uF"/>
+</technology>
+</technologies>
+</device>
+<device name="-RADIAL-2.5MM-KIT-25V-20%" package="CPOL-RADIAL-2.5MM-5MM-KIT">
+<connects>
+<connect gate="G$1" pin="+" pad="1"/>
+<connect gate="G$1" pin="-" pad="2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="PROD_ID" value="CAP-08440"/>
+<attribute name="VALUE" value="10uF"/>
+</technology>
+</technologies>
+</device>
+<device name="-EIA6032-25V-10%" package="EIA6032-NOM">
+<connects>
+<connect gate="G$1" pin="+" pad="A"/>
+<connect gate="G$1" pin="-" pad="C"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="PROD_ID" value="CAP-12984"/>
+<attribute name="VALUE" value="10µF"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -4981,6 +5195,7 @@ Siemens, Hewlett-Packard, Texas Instuments, Sharp, Motorola&lt;p&gt;
 <part name="TPGND" library="SparkFun-Connectors" deviceset="TEST-POINT" device="TP_15TH_THRU"/>
 <part name="TPDIV" library="SparkFun-Connectors" deviceset="TEST-POINT" device="TP_15TH_THRU"/>
 <part name="TPVREG" library="SparkFun-Connectors" deviceset="TEST-POINT" device="TP_15TH_THRU"/>
+<part name="C1" library="SparkFun-Capacitors" deviceset="10UF-POLAR" device="-RADIAL-2.5MM-25V-20%" value="22uF 50V"/>
 </parts>
 <sheets>
 <sheet>
@@ -5013,10 +5228,10 @@ Dark = ~50kΩ-1MΩ</text>
 <instance part="BATT" gate="G$1" x="96.52" y="109.22"/>
 <instance part="RB+820K" gate="G$1" x="106.68" y="93.98" rot="R90"/>
 <instance part="RB-360K" gate="G$1" x="114.3" y="93.98" rot="R90"/>
-<instance part="Q2" gate="NMOS" x="71.12" y="101.6"/>
-<instance part="RMF150" gate="G$1" x="58.42" y="99.06"/>
+<instance part="Q2" gate="NMOS" x="60.96" y="101.6"/>
+<instance part="RMF150" gate="G$1" x="48.26" y="99.06"/>
 <instance part="BATTSUPPLY" gate="G$1" x="106.68" y="121.92"/>
-<instance part="SUPPLY6" gate="GND" x="73.66" y="91.44"/>
+<instance part="SUPPLY6" gate="GND" x="63.5" y="91.44"/>
 <instance part="PHOTOSENSE" gate="G$1" x="162.56" y="91.44"/>
 <instance part="SUPPLY7" gate="GND" x="152.4" y="73.66"/>
 <instance part="VCC2" gate="G$1" x="157.48" y="101.6"/>
@@ -5025,7 +5240,7 @@ Dark = ~50kΩ-1MΩ</text>
 <instance part="CHANGE" gate="G$1" x="76.2" y="15.24"/>
 <instance part="WAKE" gate="G$1" x="76.2" y="7.62"/>
 <instance part="SUPPLY8" gate="GND" x="68.58" y="0"/>
-<instance part="CAMPWR" gate="J$1" x="86.36" y="109.22" rot="MR0"/>
+<instance part="CAMPWR" gate="J$1" x="76.2" y="109.22" rot="MR0"/>
 <instance part="OPTO" gate="A" x="121.92" y="58.42"/>
 <instance part="OPTO" gate="B" x="121.92" y="40.64"/>
 <instance part="RPU30-60K" gate="G$1" x="17.78" y="88.9" rot="R90"/>
@@ -5035,6 +5250,7 @@ Dark = ~50kΩ-1MΩ</text>
 <instance part="TPGND" gate="G$1" x="160.02" y="45.72"/>
 <instance part="TPDIV" gate="G$1" x="160.02" y="38.1"/>
 <instance part="TPVREG" gate="G$1" x="160.02" y="60.96"/>
+<instance part="C1" gate="G$1" x="83.82" y="111.76"/>
 </instances>
 <busses>
 </busses>
@@ -5194,10 +5410,13 @@ Dark = ~50kΩ-1MΩ</text>
 <segment>
 <pinref part="Q2" gate="NMOS" pin="S"/>
 <pinref part="SUPPLY6" gate="GND" pin="3.3V"/>
-<wire x1="73.66" y1="96.52" x2="73.66" y2="93.98" width="0.1524" layer="91"/>
+<wire x1="63.5" y1="96.52" x2="63.5" y2="93.98" width="0.1524" layer="91"/>
 <pinref part="RST" gate="G$1" pin="P$2"/>
-<wire x1="33.02" y1="93.98" x2="73.66" y2="93.98" width="0.1524" layer="91"/>
-<junction x="73.66" y="93.98"/>
+<wire x1="33.02" y1="93.98" x2="63.5" y2="93.98" width="0.1524" layer="91"/>
+<junction x="63.5" y="93.98"/>
+<pinref part="C1" gate="G$1" pin="-"/>
+<wire x1="83.82" y1="106.68" x2="83.82" y2="93.98" width="0.1524" layer="91"/>
+<wire x1="83.82" y1="93.98" x2="63.5" y2="93.98" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="SUPPLY4" gate="GND" pin="3.3V"/>
@@ -5304,10 +5523,14 @@ Dark = ~50kΩ-1MΩ</text>
 <wire x1="106.68" y1="111.76" x2="106.68" y2="119.38" width="0.1524" layer="91"/>
 <pinref part="CAMPWR" gate="J$1" pin="2"/>
 <wire x1="106.68" y1="119.38" x2="106.68" y2="121.92" width="0.1524" layer="91"/>
-<wire x1="78.74" y1="109.22" x2="73.66" y2="109.22" width="0.1524" layer="91"/>
-<wire x1="73.66" y1="109.22" x2="73.66" y2="119.38" width="0.1524" layer="91"/>
-<wire x1="73.66" y1="119.38" x2="106.68" y2="119.38" width="0.1524" layer="91"/>
+<wire x1="68.58" y1="109.22" x2="63.5" y2="109.22" width="0.1524" layer="91"/>
+<wire x1="63.5" y1="109.22" x2="63.5" y2="119.38" width="0.1524" layer="91"/>
+<wire x1="63.5" y1="119.38" x2="83.82" y2="119.38" width="0.1524" layer="91"/>
 <junction x="106.68" y="119.38"/>
+<pinref part="C1" gate="G$1" pin="+"/>
+<wire x1="83.82" y1="119.38" x2="106.68" y2="119.38" width="0.1524" layer="91"/>
+<wire x1="83.82" y1="114.3" x2="83.82" y2="119.38" width="0.1524" layer="91"/>
+<junction x="83.82" y="119.38"/>
 </segment>
 <segment>
 <pinref part="TPBATT" gate="G$1" pin="1"/>
@@ -5337,7 +5560,7 @@ Dark = ~50kΩ-1MΩ</text>
 <segment>
 <pinref part="Q2" gate="NMOS" pin="G"/>
 <pinref part="RMF150" gate="G$1" pin="2"/>
-<wire x1="66.04" y1="99.06" x2="63.5" y2="99.06" width="0.1524" layer="91"/>
+<wire x1="55.88" y1="99.06" x2="53.34" y2="99.06" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="AMBSENSE" class="0">
@@ -5412,7 +5635,7 @@ Dark = ~50kΩ-1MΩ</text>
 <segment>
 <pinref part="Q2" gate="NMOS" pin="D"/>
 <pinref part="CAMPWR" gate="J$1" pin="1"/>
-<wire x1="73.66" y1="106.68" x2="78.74" y2="106.68" width="0.1524" layer="91"/>
+<wire x1="63.5" y1="106.68" x2="68.58" y2="106.68" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="D5" class="0">
@@ -5423,8 +5646,8 @@ Dark = ~50kΩ-1MΩ</text>
 </segment>
 <segment>
 <pinref part="RMF150" gate="G$1" pin="1"/>
-<wire x1="43.18" y1="99.06" x2="53.34" y2="99.06" width="0.1524" layer="91"/>
-<label x="45.72" y="99.06" size="1.778" layer="95"/>
+<wire x1="33.02" y1="99.06" x2="43.18" y2="99.06" width="0.1524" layer="91"/>
+<label x="35.56" y="99.06" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="N$1" class="0">
