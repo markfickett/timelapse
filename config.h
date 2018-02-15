@@ -42,9 +42,12 @@
 #define VCC_VOLTAGE_LOW 11.8
 
 // Resistor values for battery. Each pair may be scaled together arbitrarily
-// (ex: 4.7 and 1.2 or 47 and 12). Keep these as floats, for arithematic.
+// (ex: 4.7 and 1.2 or 47.0 and 12.0). Keep these as floats, for arithematic.
 #define VCC_DIVIDER_SRC 838.0
 #define VCC_DIVIDER_GND 332.0
+// Adjustment factor for the (src + gnd)/gnd factor, to bring observed
+// voltages in line with actual voltage.
+#define VCC_DIVIDER_ADJ 1.026
 // Max tolerable Vcc = 17.6v =
 //     AREF * (VCC_DIVIDER_SRC + VCC_DIVIDER_GND) / VCC_DIVIDER_GND
 

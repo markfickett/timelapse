@@ -139,7 +139,7 @@ struct EnvironmentData getEnvironmentData() {
       // Convert reading to sensed voltage.
       (data.vccVoltageReading / 1023.0) * AREF
       // Scale sensed voltage to actual Vcc based on dividers.
-      * (VCC_DIVIDER_SRC + VCC_DIVIDER_GND) / VCC_DIVIDER_GND;
+      * VCC_DIVIDER_ADJ * (VCC_DIVIDER_SRC + VCC_DIVIDER_GND) / VCC_DIVIDER_GND;
   data.cameraIdleReading = analogRead(PIN_CAMERA_IDLE_SENSE);
   data.cameraIsIdle = data.cameraIdleReading >= CAMERA_IDLE_THRESHOLD;
   return data;
