@@ -5,9 +5,10 @@
 #include <EEPROM.h>
 #include "config.h"
 
-#define SCHEDULE_EEPROM_MAGIC_NUMBER 0b01011101
+#define SCHEDULE_EEPROM_MAGIC_NUMBER 0b01011110
 #define SCHEDULE_EEPROM_ADDRESS_MN 0
 #define SCHEDULE_EEPROM_ADDRESS_PERIOD 1
+#define SCHEDULE_EEPROM_ADDRESS_LAST_PHOTO 2
 
 enum SchedulePeriod {
   ONE_MINUTE,
@@ -15,6 +16,42 @@ enum SchedulePeriod {
   ONE_HOUR,
   ONE_DAY,
   SCHEDULE_PERIOD_SENTINEL};
+
+/**
+ * Writes a 4 byte (32bit) long to the eeprom at the specified address
+ * to address + 3.
+ *
+ * From https://playground.arduino.cc/Code/EEPROMReadWriteLong
+ */
+void EEPROMWritelong(int address, uint32_t value) {
+  // Decomposition from a long to 4 bytes by using bitshift.
+  // One = Most significant -> Four = Least significant byte
+  byte four = (value & 0xFF);
+  byte three = ((value >> 8) & 0xFF);
+  byte two = ((value >> 16) & 0xFF);
+  byte one = ((value >> 24) & 0xFF);
+
+  // Write the 4 bytes into the eeprom memory.
+  EEPROM.write(address, four);
+  EEPROM.write(address + 1, three);
+  EEPROM.write(address + 2, two);
+  EEPROM.write(address + 3, one);
+}
+
+long EEPROMReadlong(long address) {
+  // Read the 4 bytes from the EEPROM memory.
+  uint32_t four = EEPROM.read(address);
+  uint32_t three = EEPROM.read(address + 1);
+  uint32_t two = EEPROM.read(address + 2);
+  uint32_t one = EEPROM.read(address + 3);
+
+  // Return the recomposed long by using bitshift.
+  return
+      ((four << 0) & 0xFF) +
+      ((three << 8) & 0xFF00) +
+      ((two << 16) & 0xFF0000) +
+      ((one << 24) & 0xFF000000);
+}
 
 class Schedule {
   public:
@@ -25,9 +62,11 @@ class Schedule {
     /**
      * Read saved SchedulePeriod from EEPROM.
      */
-    Schedule(DateTime initialTimestamp) {
+    Schedule() {
       Schedule::setUpEeprom();
-      setPeriodAndNextAfter(initialTimestamp, Schedule::readFromEeprom());
+      setPeriodAndNextAfter(
+          Schedule::getLastPhotoTime(),
+          Schedule::readFromEeprom());
     }
 
     bool isTimeFor(DateTime now) {
@@ -89,6 +128,14 @@ class Schedule {
       next = periodAligned;
     }
 
+    void recordLastPhoto(DateTime now) {
+      EEPROMWritelong(SCHEDULE_EEPROM_ADDRESS_LAST_PHOTO, now.unixtime());
+    }
+
+    DateTime getLastPhotoTime() {
+      return DateTime(EEPROMReadlong(SCHEDULE_EEPROM_ADDRESS_LAST_PHOTO));
+    }
+
   private:
     static void setUpEeprom() {
       if (EEPROM.read(SCHEDULE_EEPROM_ADDRESS_MN)
@@ -96,6 +143,8 @@ class Schedule {
         return;
       }
       EEPROM.write(SCHEDULE_EEPROM_ADDRESS_PERIOD, TEN_MINUTES);
+      EEPROM.write(
+          SCHEDULE_EEPROM_ADDRESS_LAST_PHOTO, 0L /* some time in the past */);
       EEPROM.write(SCHEDULE_EEPROM_ADDRESS_MN, SCHEDULE_EEPROM_MAGIC_NUMBER);
     }
 

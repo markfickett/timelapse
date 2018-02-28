@@ -67,8 +67,7 @@ byte charTo7Seg(char c) {
   }
 }
 
-DateTime lastPhoto(2018, 2, 14);  // some time in the past
-Schedule schedule(lastPhoto);
+Schedule schedule;
 
 void setup() {
   // This must be called before analogRead if voltage is applied to the AREF
@@ -225,7 +224,7 @@ void debugMode() {
     delay(1000);
 
     if (consumeChangePress()) {
-      schedule.cyclePeriodAndRescheduleAfter(lastPhoto);
+      schedule.cyclePeriodAndRescheduleAfter(schedule.getLastPhotoTime());
     }
   }
 
@@ -264,8 +263,9 @@ void debugMode() {
     display.writeDigitRaw(3, charTo7Seg('C'));
     display.writeDisplay();
     if (consumeChangePress()) {
+      schedule.recordLastPhoto(data.now);
       takePicture();
-      updateAfterPicture(data.now);
+      schedule.advancePast(data.now);
     }
     delay(50);
   }
@@ -396,11 +396,6 @@ void waitForCameraActivity() {
   }
 }
 
-void updateAfterPicture(DateTime now) {
-  schedule.advancePast(now);
-  lastPhoto = now;
-}
-
 void loop() {
   if (consumeWakePress()) {
     debugMode();
@@ -410,8 +405,10 @@ void loop() {
   if (data.vccVoltage >= VCC_VOLTAGE_LOW
       && data.ambientIsLight
       && schedule.isTimeFor(data.now)) {
+    // Record the last photo time before taking it in case of brown-outs.
+    schedule.recordLastPhoto(data.now);
     takePicture();
-    updateAfterPicture(data.now);
+    schedule.advancePast(data.now);
   }
 
   lowPowerSleep();
