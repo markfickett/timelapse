@@ -34,7 +34,8 @@ I designed PCBs using EAGLE's non-commercial free license and autolayout, follow
 
 ### Off-Board Parts and Connectors
 
- * 12v to 9v DC regulator [$8 on Amazon](http://www.amazon.com/gp/product/B00A71E52G)
+ * 12v to 9v DC regulator [$8 on Amazon](http://www.amazon.com/gp/product/B00A71E52G) for power to camera
+ * AC adapter plug (3D printed plug for Nikon D90; [photo](nikond90acplug/151021nikond90acplugendquarter.jpg), [STL file](nikond90acplug/NikonD90AcPlugReducedH.stl), [Thingiverse](https://www.thingiverse.com/thing:1107374/apps/print/))
  * XT60s (power connections, [$2 from Sparkfun](https://www.sparkfun.com/products/10474), compare at HobbyKing)
  * servo cables (peripheral/control connections)
  * lamp cord (battery connection)
