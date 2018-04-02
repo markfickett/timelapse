@@ -3,6 +3,11 @@
  * Pin-number and behavior configuration.
  */
 
+// Leave the camera on all the time. When a Nikon D90 is power cycled (w/o its
+// own battery and with the power switch in the "on" position) it starts a new
+// folder for every photo and resets settings (like noise reduction).
+#define CAMERA_POWER_ALWAYS_ON
+
 // This value is passed to Narcoleptic as an int, so must be < INT_MAX (32767).
 #define SLEEP_INTERVAL_MILLIS (10 * 1000)
 

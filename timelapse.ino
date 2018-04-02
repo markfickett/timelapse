@@ -79,7 +79,11 @@ void setup() {
   pinMode(PIN_BATTERY_SENSE, INPUT);
 
   pinMode(PIN_CAMERA_POWER_SUPPLY, OUTPUT);
+#ifdef CAMERA_POWER_ALWAYS_ON
+  digitalWrite(PIN_CAMERA_POWER_SUPPLY, HIGH);
+#else
   digitalWrite(PIN_CAMERA_POWER_SUPPLY, LOW);
+#endif
 
   pinMode(PIN_WAKE_BUTTON, INPUT_PULLUP);
   pinMode(PIN_CHANGE_BUTTON, INPUT_PULLUP);
@@ -270,6 +274,7 @@ void debugMode() {
     delay(50);
   }
 
+#ifndef CAMERA_POWER_ALWAYS_ON
   // camera power on/off
   bool isOn = false;
   while (!consumeWakePress()) {
@@ -290,6 +295,7 @@ void debugMode() {
     delay(50);
   }
   digitalWrite(PIN_CAMERA_POWER_SUPPLY, LOW);
+#endif CAMERA_POWER_ALWAYS_ON
 
   // ambient light level
   while (!consumeWakePress()) {
@@ -360,8 +366,10 @@ void takePicture() {
   display.writeDigitRaw(3, charTo7Seg('P'));
   display.writeDisplay();
 
+#ifndef CAMERA_POWER_ALWAYS_ON
   digitalWrite(PIN_CAMERA_POWER_SUPPLY, HIGH);
   waitForCameraActivity();
+#endif
 
   digitalWrite(PIN_CAMERA_FOCUS, HIGH);
   digitalWrite(PIN_CAMERA_EXPOSE, HIGH);
@@ -371,7 +379,9 @@ void takePicture() {
 
   waitForCameraActivity();
 
+#ifndef CAMERA_POWER_ALWAYS_ON
   digitalWrite(PIN_CAMERA_POWER_SUPPLY, LOW);
+#endif
   display.clear();
   display.writeDisplay();
 }
