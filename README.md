@@ -52,3 +52,7 @@ A Pelican case provides a sturdy, watertight enclosure which is easy to open and
  * 5W solar panel ([$35 on Amazon](https://www.amazon.com/gp/product/B004FOEUI0)) for locations with a fair amount of direct sun, or as overkill, 30W panel ([$60 on Amazon](https://www.amazon.com/gp/product/B00JDRG69K))
  * SLA solar charge controller (this [$10 CMP12 on Amazon](https://www.amazon.com/gp/product/B010FNO9NU) works well, but draws 10mA when idle, even with its indicator LEDs clipped)
  * 12v sealed lead-acid battery (a 4Ah version for home security systems works well; [$20 on Amazon](https://www.amazon.com/dp/B00GYHBACA))
+
+## Related
+
+[Brinno](http://brinno.com/time-lapse-camera/TLC200Pro) makes a 1.3MP HDR timelapse camera with CS-mount lenses and a weatherproof case, claiming 45-day battery life on 4xAA.
