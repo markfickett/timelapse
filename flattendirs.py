@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """Copies all files recursively under `src/` as flat files under `dst/`.
 
 Creates `dst/` if necessary. Renames files sequentially.
