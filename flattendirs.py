@@ -39,19 +39,23 @@ def FlattenDirs(src, dst):
   n = 0
   not_copied = []
   for dirpath, dirnames, filenames in os.walk(src):
+    dirnames.sort()
+    filenames.sort()
     for src_local_filename in filenames:
-      _, ext = os.path.splitext(src_filename)
+      _, ext = os.path.splitext(src_local_filename)
       src_filename = os.path.join(dirpath, src_local_filename)
-      dst_filename = os.path.join(dst, '%05%s' % (n, ext))
+      dst_filename = os.path.join(dst, '%05d%s' % (n, ext))
       if not _Copy(src_filename, dst_filename):
         not_copied.append(src_filename)
       n += 1
 
-  logging.info('Copied %d files.', n)
+  logging.info('Processed %d files, %d errors.', n, len(not_copied))
   if not_copied:
-    logging.warning(
+    logging.error(
         'Did not copy %d files:\n\t%s',
         len(not_copied), '\n\t'.join(not_copied))
+    return False
+  return True
 
 
 if __name__ == '__main__':
@@ -72,4 +76,5 @@ if __name__ == '__main__':
       help='Copy (and rename) files to this directory, which may be created.')
   args = parser.parse_args()
 
-  FlattenDirs(args.src, args.dst)
+  if not FlattenDirs(args.src, args.dst):
+    sys.exit(1)
